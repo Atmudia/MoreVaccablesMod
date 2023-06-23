@@ -18,10 +18,11 @@ public static class Patch_Ammo
         var firstSlime = ammoSlot.transform.Find("FirstSlime").gameObject;
         var secondSlime = ammoSlot.transform.Find("SecondSlime").gameObject;
         var slimeDefinition = id.Cast<SlimeDefinition>();
-        var firstSlimeDefinition = slimeDefinition.BaseSlimes[0];
-        var secondSlimeDefinition = slimeDefinition.BaseSlimes[1];
-        firstSlime.GetComponent<Image>().sprite = firstSlimeDefinition.icon;
-        secondSlime.GetComponent<Image>().sprite = secondSlimeDefinition.icon;
+        
+        var firstSlimeDefinition = SRSingleton<SceneContext>.Instance.SlimeAppearanceDirector.GetChosenSlimeAppearance(slimeDefinition.BaseSlimes[0]);
+        var secondSlimeDefinition = SRSingleton<SceneContext>.Instance.SlimeAppearanceDirector.GetChosenSlimeAppearance(slimeDefinition.BaseSlimes[1]);
+        firstSlime.GetComponent<Image>().sprite = firstSlimeDefinition.Icon;
+        secondSlime.GetComponent<Image>().sprite = secondSlimeDefinition.Icon;
         firstSlime.gameObject.SetActive(true);
         secondSlime.gameObject.SetActive(true);
     }

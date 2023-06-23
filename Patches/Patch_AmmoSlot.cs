@@ -19,7 +19,12 @@ public static class Patch_AmmoSlot
     [HarmonyPatch(nameof(Ammo.Slot.MaxCount), MethodType.Getter)]
     public static void MaxCount(Ammo.Slot __instance, ref int __result)
     {
-        if (!largoGroup.IsMember(__instance.Id) || __instance.Id.ReferenceId.Equals("SlimeDefinition.Tarr")) 
+        if (isTarrEnabled.Value && __instance.Id.ReferenceId.Equals("SlimeDefinition.Tarr"))
+        {
+            __result /= 2; 
+            return;
+        }
+        if (!largoGroup.IsMember(__instance.Id)) 
             return;
         __result /= 2;
     }

@@ -13,6 +13,7 @@ namespace MoreVaccablesMod;
 public class EntryPoint : MelonMod
 {
     internal static IdentifiableTypeGroup largoGroup;
+    internal static IdentifiableTypeGroup nonSlimesGroup;
     private static Sprite iconLargoPedia;
     private static Sprite iconContainer;
     private MelonPreferences_Category MoreVaccablesMod;
@@ -26,10 +27,13 @@ public class EntryPoint : MelonMod
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
         if (!sceneName.Equals("GameCore")) return;
+        nonSlimesGroup ??= Get<IdentifiableTypeGroup>("NonSlimesGroup");
         largoGroup ??= Get<IdentifiableTypeGroup>("LargoGroup");
+
         iconLargoPedia ??= Get<Sprite>("iconLargoPedia");
         iconContainer ??= ConvertSprite(LoadImage("MoreVaccablesMod.iconContainer.png"));
         var identifiableTypeGroup = Get<IdentifiableTypeGroup>("VaccableBaseSlimeGroup");
+        nonSlimesGroup.memberGroups.Add(identifiableTypeGroup);
         SlimeDefinition slimeGold = Get<SlimeDefinition>("Gold");
         slimeGold.prefab.GetComponent<Vacuumable>().size = Vacuumable.Size.NORMAL;
         foreach (var slimeAppearance in slimeGold.AppearancesDefault)
@@ -37,24 +41,34 @@ public class EntryPoint : MelonMod
         if (slimeGold.prefab.TryGetComponentButBetter<GoldSlimeFlee>(out var goldSlimeFlee))
             Object.Destroy(goldSlimeFlee);
         identifiableTypeGroup.memberTypes.Add(slimeGold);
+        nonSlimesGroup.memberTypes.Add(slimeGold);
+
         SlimeDefinition slimeLucky = Get<SlimeDefinition>("Lucky");
         foreach (var slimeAppearance in slimeLucky.AppearancesDefault)
             slimeLucky.SetPalette(slimeAppearance);
         if (slimeLucky.prefab.TryGetComponentButBetter<LuckySlimeFlee>(out var slimeLuckyFlee))
             Object.Destroy(slimeLuckyFlee);
         identifiableTypeGroup.memberTypes.Add(slimeLucky);
-        SlimeDefinition slimeTarr = Get<SlimeDefinition>("Tarr");
-        slimeTarr.prefab.GetComponent<Vacuumable>().size = Vacuumable.Size.NORMAL;
-        foreach (var slimeAppearance in slimeTarr.AppearancesDefault)
+        nonSlimesGroup.memberTypes.Add(slimeLucky);
+
+        if (isTarrEnabled.Value)
         {
-            if (slimeAppearance.SaveSet == SlimeAppearance.AppearanceSaveSet.CLASSIC)
+            SlimeDefinition slimeTarr = Get<SlimeDefinition>("Tarr");
+            slimeTarr.prefab.GetComponent<Vacuumable>().size = Vacuumable.Size.NORMAL;
+            foreach (var slimeAppearance in slimeTarr.AppearancesDefault)
             {
-                slimeAppearance.Icon = Get<Sprite>("iconSlimeTarr");
+                if (slimeAppearance.SaveSet == SlimeAppearance.AppearanceSaveSet.CLASSIC)
+                {
+                    slimeAppearance.Icon = Get<Sprite>("iconSlimeTarr");
+                }
+                slimeTarr.SetPalette(slimeAppearance);
             }
-            slimeTarr.SetPalette(slimeAppearance);
+            slimeTarr.icon = Get<Sprite>("iconSlimeTarr");
+            identifiableTypeGroup.memberTypes.Add(slimeTarr); 
+            nonSlimesGroup.memberTypes.Add(slimeTarr);
         }
-        slimeTarr.icon = Get<Sprite>("iconSlimeTarr");
-        identifiableTypeGroup.memberTypes.Add(slimeTarr);
+        
+       
         ColorUtility.TryParseHtmlString("#75d9ff", out var potColor);
         var nonLiquids = Get<IdentifiableTypeGroup>("VaccableNonLiquids");
         var localizedString = LocalizationUtil.CreateByKey("Actor", "l.container_case");
@@ -67,7 +81,10 @@ public class EntryPoint : MelonMod
                 identType.color = potColor;
                 identType.localizedName = localizedString;
                 nonLiquids.memberTypes.Add(identType);
+                nonSlimesGroup.memberTypes.Add(identType);
+
             }
+            
         }
         foreach (var identifiableType in largoGroup.memberTypes)
         {
@@ -81,6 +98,8 @@ public class EntryPoint : MelonMod
             SetLargoIconAndPalette(type);
         }
         nonLiquids.memberGroups.Add(largoGroup);
+        nonSlimesGroup.memberGroups.Add(largoGroup);
+
     }
     public static void SetLargoIconAndPalette(SlimeDefinition type)
     {

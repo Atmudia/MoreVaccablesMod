@@ -7,7 +7,13 @@ public static class AmmoModelGetSlotMaxCount
 {
     public static void Postfix(AmmoModel __instance, IdentifiableType id, int index, ref int __result)
     {
-        if (!largoGroup.IsMember(id) || id.ReferenceId.Equals("SlimeDefinition.Tarr")) 
+        if (isTarrEnabled.Value && id.ReferenceId.Equals("SlimeDefinition.Tarr"))
+        {
+            __result /= 2;
+            return;
+        }
+
+        if (!largoGroup.IsMember(id)) 
             return;
         __result /= 2;
     }
