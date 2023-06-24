@@ -27,7 +27,7 @@ public static class Patch_AmmoSlotViewHolder
         var slime2 = Object.Instantiate(icon, ammoSlot.transform).GetComponent<RectTransform>();
         slime2.name = "SecondSlime";
         slime2.sizeDelta /= 1.6f;
-        slime2.anchoredPosition = new Vector2(-9, -9);
+        slime2.anchoredPosition = new Vector2(-13.5f, -6.3f);
         slime1.gameObject.SetActive(false);
         slime2.gameObject.SetActive(false); 
     }

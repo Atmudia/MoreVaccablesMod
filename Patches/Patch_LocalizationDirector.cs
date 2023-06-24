@@ -7,7 +7,7 @@ using System.Collections;
 namespace MoreVaccablesMod.Patches;
 
 [HarmonyPatch(typeof(LocalizationDirector), nameof(LocalizationDirector.LoadTables))]
-public static class LocalizationDirectorLoadTable
+public static class Patch_LocalizationDirector
 {
     public static void Postfix(LocalizationDirector __instance)
     {
@@ -17,6 +17,6 @@ public static class LocalizationDirectorLoadTable
     public static IEnumerator LoadTable(LocalizationDirector localizationDirector)
     {
         yield return new WaitForSeconds(0.1f);
-        localizationDirector.Tables["Actor"].AddEntry("l.container_case", "Case");
+        localizationDirector.Tables["Actor"].AddEntry("l.container_case", "Pot");
     }
 }

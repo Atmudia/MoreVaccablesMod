@@ -3,11 +3,14 @@ global using static MoreVaccablesMod.EntryPoint;
 using System.Collections;
 using System.Linq;
 using HarmonyLib;
+using Il2CppInterop.Runtime;
 using Il2CppMonomiPark.SlimeRancher.Script.Util;
 using Il2CppMonomiPark.SlimeRancher.UI.Localization;
 using MelonLoader;
+using MoreVaccablesMod;
 using UnityEngine;
 using Object = UnityEngine.Object;
+[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.0.0", "KomiksPL")]
 namespace MoreVaccablesMod;
 
 public class EntryPoint : MelonMod
@@ -22,7 +25,7 @@ public class EntryPoint : MelonMod
     public override void OnInitializeMelon()
     {
         MoreVaccablesMod = MelonPreferences.CreateCategory(nameof(MoreVaccablesMod));
-        isTarrEnabled = MoreVaccablesMod.CreateEntry<bool>("isTarrEnabled", true);
+        isTarrEnabled = MoreVaccablesMod.CreateEntry<bool>("isTarrEnabled", true, "Is Tarr Enabled", "Should More Vaccable can vac Tarr Slime?");
     }
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
@@ -50,7 +53,6 @@ public class EntryPoint : MelonMod
             Object.Destroy(slimeLuckyFlee);
         identifiableTypeGroup.memberTypes.Add(slimeLucky);
         nonSlimesGroup.memberTypes.Add(slimeLucky);
-
         if (isTarrEnabled.Value)
         {
             SlimeDefinition slimeTarr = Get<SlimeDefinition>("Tarr");
@@ -67,8 +69,6 @@ public class EntryPoint : MelonMod
             identifiableTypeGroup.memberTypes.Add(slimeTarr); 
             nonSlimesGroup.memberTypes.Add(slimeTarr);
         }
-        
-       
         ColorUtility.TryParseHtmlString("#75d9ff", out var potColor);
         var nonLiquids = Get<IdentifiableTypeGroup>("VaccableNonLiquids");
         var localizedString = LocalizationUtil.CreateByKey("Actor", "l.container_case");
@@ -81,7 +81,6 @@ public class EntryPoint : MelonMod
                 identType.color = potColor;
                 identType.localizedName = localizedString;
                 nonLiquids.memberTypes.Add(identType);
-                nonSlimesGroup.memberTypes.Add(identType);
 
             }
             

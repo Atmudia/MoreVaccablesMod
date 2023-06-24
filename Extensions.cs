@@ -10,11 +10,11 @@ public static class Extensions
     public static bool IsNull(this object @object) => @object == null;
     public static void SetPalette(this SlimeDefinition slimeDefinition, SlimeAppearance slimeAppearance)
     {
-        var slimeAppearanceColorPalette = slimeAppearance.ColorPalette;
-        Color32 color = slimeAppearanceColorPalette.Top;
-        slimeAppearanceColorPalette.Ammo = color;
-        slimeDefinition.color = color;
-        slimeAppearance.ColorPalette = slimeAppearanceColorPalette;
+        var splatColor = slimeAppearance.SplatColor;
+        var colorPalette = slimeAppearance.ColorPalette;
+        colorPalette.Ammo = splatColor;
+        slimeDefinition.color = splatColor;
+        slimeAppearance.ColorPalette = colorPalette;
     }
 
     public static bool TryGetComponentButBetter<T>(this GameObject @this, out T monoBehaviour) where T : MonoBehaviour
