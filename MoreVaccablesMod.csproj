@@ -52,9 +52,6 @@
     <Reference Include="UnityEngine.UIModule">
       <HintPath>D:\SteamLibrary\steamapps\common\Slime Rancher 2\MelonLoader\Il2CppAssemblies\UnityEngine.UIModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityExplorer.ML.IL2CPP.net6preview.interop">
-      <HintPath>D:\SteamLibrary\steamapps\common\Slime Rancher 2\Mods\UnityExplorer.ML.IL2CPP.net6preview.interop.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.355802">

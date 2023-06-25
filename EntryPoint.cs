@@ -10,7 +10,7 @@ using MelonLoader;
 using MoreVaccablesMod;
 using UnityEngine;
 using Object = UnityEngine.Object;
-[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.0.0", "KomiksPL")]
+[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.0.1", "KomiksPL")]
 namespace MoreVaccablesMod;
 
 public class EntryPoint : MelonMod
@@ -29,10 +29,10 @@ public class EntryPoint : MelonMod
     }
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
+        
         if (!sceneName.Equals("GameCore")) return;
         nonSlimesGroup ??= Get<IdentifiableTypeGroup>("NonSlimesGroup");
         largoGroup ??= Get<IdentifiableTypeGroup>("LargoGroup");
-
         iconLargoPedia ??= Get<Sprite>("iconLargoPedia");
         iconContainer ??= ConvertSprite(LoadImage("MoreVaccablesMod.iconContainer.png"));
         var identifiableTypeGroup = Get<IdentifiableTypeGroup>("VaccableBaseSlimeGroup");
