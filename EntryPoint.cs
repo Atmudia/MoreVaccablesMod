@@ -2,6 +2,7 @@
 global using static MoreVaccablesMod.EntryPoint;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using Il2CppInterop.Runtime;
@@ -23,6 +24,8 @@ public class EntryPoint : MelonMod
     private MelonPreferences_Category MoreVaccablesMod;
     internal static MelonPreferences_Entry<bool> isTarrEnabled;
 
+    public static List<SlimeDefinition> LateActivation = new List<SlimeDefinition>();
+
     public override void OnInitializeMelon()
     {
         MoreVaccablesMod = MelonPreferences.CreateCategory(nameof(MoreVaccablesMod));
@@ -30,6 +33,21 @@ public class EntryPoint : MelonMod
     }
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
+        if (sceneName.Equals("zoneCore"))
+        {
+            foreach (var identifiableType in LateActivation)
+            {
+                if (identifiableType.AppearancesDefault == null)
+                {
+                    MelonLogger.Msg($"Can't add modded largo to be vaccable: {identifiableType.ReferenceId}");
+                    continue;
+                }
+                if (identifiableType.prefab != null)
+                    identifiableType.prefab.GetComponent<Vacuumable>().size = Vacuumable.Size.NORMAL;
+                SetLargoIconAndPalette(identifiableType);
+            }
+        }
+        
         if (!sceneName.Equals("GameCore")) return;
         nonSlimesGroup ??= Get<IdentifiableTypeGroup>("NonSlimesGroup");
         largoGroup ??= Get<IdentifiableTypeGroup>("LargoGroup");
@@ -87,14 +105,21 @@ public class EntryPoint : MelonMod
         }
         foreach (var identifiableType in new Il2CppSystem.Collections.Generic.List<IdentifiableType>(largoGroup.GetAllMembers()))
         {
+            
             var type = identifiableType.TryCast<SlimeDefinition>();
             if (type == null)
                 continue;
+            if (type.AppearancesDefault == null)
+            {
+                LateActivation.Add(type);
+                continue;
+            }
             if (type.referenceId == null)
                 continue;
             if (type.prefab != null)
                 type.prefab.GetComponent<Vacuumable>().size = Vacuumable.Size.NORMAL;
             SetLargoIconAndPalette(type);
+            
         }
         nonLiquids.memberGroups.Add(largoGroup);
         nonSlimesGroup.memberGroups.Add(largoGroup);
@@ -102,7 +127,7 @@ public class EntryPoint : MelonMod
     }
     public static void SetLargoIconAndPalette(SlimeDefinition type)
     {
-        if (type.AppearancesDefault == null){}
+      
         foreach (var slimeAppearance in type.AppearancesDefault)
         {
             var splatColor = AverageColorFromArray(type.BaseSlimes[0].AppearancesDefault[0].SplatColor, type.BaseSlimes[1].AppearancesDefault[0].SplatColor);
@@ -110,7 +135,7 @@ public class EntryPoint : MelonMod
             var colorPalette = slimeAppearance.ColorPalette;
             colorPalette.Ammo = splatColor;
             slimeAppearance._icon = iconLargoPedia;
-            slimeAppearance._colorPalette = colorPalette;
+            slimeAppearance._colorPalette = colorPalette; 
             type.icon = iconLargoPedia;
         }
            
