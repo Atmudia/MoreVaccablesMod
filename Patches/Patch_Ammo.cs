@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using HarmonyLib;
+using MelonLoader;
 using UnityEngine.UI;
 
 namespace MoreVaccablesMod.Patches;
@@ -12,7 +13,8 @@ public static class Patch_Ammo
     {
         if (!__result || !largoGroup.IsMember(id)) 
                 return;
-        var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder.Find(x => x.data.id == id);
+        MelonLogger.Msg("test");
+        var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder.Find(x => x.data.Id == id);
         var ammoSlot = ammoSlotViewHolder.transform.Find("Ammo Slot").gameObject;
         ammoSlot.transform.Find("Icon").gameObject.SetActive(false);
         var firstSlime = ammoSlot.transform.Find("FirstSlime").gameObject;
@@ -29,17 +31,18 @@ public static class Patch_Ammo
     [HarmonyPatch(nameof(Ammo.DecrementSelectedAmmo)), HarmonyPrefix]
     public static void DecrementSelectedAmmo(Ammo __instance, int amount)
     {
-        var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder.FirstOrDefault(x =>x.data.index == __instance.selectedAmmoIdx);
+        var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder.FirstOrDefault(x =>x.data.Index == __instance.SelectedAmmoIndex);
         if (ammoSlotViewHolder == null) return;
-        if (!largoGroup.IsMember(ammoSlotViewHolder.data.id))
+        if (!largoGroup.IsMember(ammoSlotViewHolder.data.Id))
             return;
-        var dataCount = ammoSlotViewHolder.data.count - amount;
+        var dataCount = ammoSlotViewHolder.data.Count - amount;
         if (dataCount > 1)
             return;
         var ammoSlot = ammoSlotViewHolder.transform.Find("Ammo Slot").gameObject;
         ammoSlot.transform.Find("Icon").gameObject.SetActive(true);
         ammoSlot.transform.Find("FirstSlime").gameObject.SetActive(false);
         ammoSlot.transform.Find("SecondSlime").gameObject.SetActive(false);
+        MelonLogger.Msg($"test {nameof(DecrementSelectedAmmo)}");
     }
     
 }

@@ -10,7 +10,7 @@ public static class PediaDirectorMaybeShowPopup
         if (identId.IsNull()) return true;
         if (largoGroup.IsMember(identId))
         {
-            __instance.MaybeShowPopup(SRSingleton<SceneContext>.Instance.PlayerState.Vacuum.largoSlimePediaEntry);
+            __instance.MaybeShowPopup(SRSingleton<SceneContext>.Instance.PlayerState.Vacuum.LargoSlimePediaEntry);
             return false;
         }
 

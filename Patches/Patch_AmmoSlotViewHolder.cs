@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using HarmonyLib;
 using Il2CppMonomiPark.SlimeRancher.UI;
+using MelonLoader;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,7 +20,7 @@ public static class Patch_AmmoSlotViewHolder
         ammoSlotViewHolder.Add(__instance);
         var ammoSlot = __instance.transform.Find("Ammo Slot");
         var icon = ammoSlot.transform.Find("Icon");
-
+        
         var slime1 = Object.Instantiate(icon, ammoSlot.transform).GetComponent<RectTransform>();
         slime1.name = "FirstSlime";
         slime1.sizeDelta /= 1.6f;
@@ -34,19 +35,20 @@ public static class Patch_AmmoSlotViewHolder
     [HarmonyPatch(nameof(AmmoSlotViewHolder.UpdateAmmoDisplay)), HarmonyPrefix]
     public static void UpdateAmmoDisplay(AmmoSlotViewHolder __instance, Ammo.Slot data)
     {
-        if (!largoGroup.IsMember(data.id)) return;
-        if (data.count == 0) return;
+        if (!largoGroup.IsMember(data.Id)) return;
+        if (data.Count == 0) return;
         var ammoSlot = __instance.transform.Find("Ammo Slot").gameObject;
         var firstSlime = ammoSlot.transform.Find("FirstSlime").gameObject;
         if (firstSlime.activeSelf) return;
         ammoSlot.transform.Find("Icon").gameObject.SetActive(false);
         var secondSlime = ammoSlot.transform.Find("SecondSlime").gameObject;
-        var slimeDefinition = data.id.Cast<SlimeDefinition>();
+        var slimeDefinition = data.Id.Cast<SlimeDefinition>();
         var firstSlimeDefinition = slimeDefinition.BaseSlimes[0];
         var secondSlimeDefinition = slimeDefinition.BaseSlimes[1];
         firstSlime.GetComponent<Image>().sprite = firstSlimeDefinition.icon;
         secondSlime.GetComponent<Image>().sprite = secondSlimeDefinition.icon;
         firstSlime.gameObject.SetActive(true);
         secondSlime.gameObject.SetActive(true);
+        
     }
 }

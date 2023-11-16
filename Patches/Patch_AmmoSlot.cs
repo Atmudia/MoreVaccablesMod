@@ -28,6 +28,7 @@ public static class Patch_AmmoSlot
         }
         if (!largoGroup.IsMember(__instance.Id)) 
             return;
+
         __result /= 2;
     }
 }

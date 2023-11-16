@@ -14,7 +14,7 @@ public static class Extensions
         var colorPalette = slimeAppearance.ColorPalette;
         colorPalette.Ammo = splatColor;
         slimeDefinition.color = splatColor;
-        slimeAppearance.ColorPalette = colorPalette;
+        slimeAppearance._colorPalette = colorPalette;
     }
 
     public static bool TryGetComponentButBetter<T>(this GameObject @this, out T monoBehaviour) where T : MonoBehaviour

@@ -1,5 +1,6 @@
 ﻿global using Il2Cpp;
 global using static MoreVaccablesMod.EntryPoint;
+using System;
 using System.Collections;
 using System.Linq;
 using HarmonyLib;
@@ -10,7 +11,7 @@ using MelonLoader;
 using MoreVaccablesMod;
 using UnityEngine;
 using Object = UnityEngine.Object;
-[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.0.1", "KomiksPL")]
+[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.0.4", "KomiksPL", "https://www.nexusmods.com/slimerancher2/mods/42")]
 namespace MoreVaccablesMod;
 
 public class EntryPoint : MelonMod
@@ -29,7 +30,6 @@ public class EntryPoint : MelonMod
     }
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
-        
         if (!sceneName.Equals("GameCore")) return;
         nonSlimesGroup ??= Get<IdentifiableTypeGroup>("NonSlimesGroup");
         largoGroup ??= Get<IdentifiableTypeGroup>("LargoGroup");
@@ -61,7 +61,7 @@ public class EntryPoint : MelonMod
             {
                 if (slimeAppearance.SaveSet == SlimeAppearance.AppearanceSaveSet.CLASSIC)
                 {
-                    slimeAppearance.Icon = Get<Sprite>("iconSlimeTarr");
+                    slimeAppearance._icon = Get<Sprite>("iconSlimeTarr");
                 }
                 slimeTarr.SetPalette(slimeAppearance);
             }
@@ -85,7 +85,7 @@ public class EntryPoint : MelonMod
             }
             
         }
-        foreach (var identifiableType in largoGroup.memberTypes)
+        foreach (var identifiableType in new Il2CppSystem.Collections.Generic.List<IdentifiableType>(largoGroup.GetAllMembers()))
         {
             var type = identifiableType.TryCast<SlimeDefinition>();
             if (type == null)
@@ -102,14 +102,15 @@ public class EntryPoint : MelonMod
     }
     public static void SetLargoIconAndPalette(SlimeDefinition type)
     {
+        if (type.AppearancesDefault == null){}
         foreach (var slimeAppearance in type.AppearancesDefault)
         {
             var splatColor = AverageColorFromArray(type.BaseSlimes[0].AppearancesDefault[0].SplatColor, type.BaseSlimes[1].AppearancesDefault[0].SplatColor);
             type.color = splatColor;
             var colorPalette = slimeAppearance.ColorPalette;
             colorPalette.Ammo = splatColor;
-            slimeAppearance.Icon = iconLargoPedia;
-            slimeAppearance.ColorPalette = colorPalette;
+            slimeAppearance._icon = iconLargoPedia;
+            slimeAppearance._colorPalette = colorPalette;
             type.icon = iconLargoPedia;
         }
            

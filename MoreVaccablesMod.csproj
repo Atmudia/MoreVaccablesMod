@@ -5,6 +5,7 @@
     <LangVersion>latest</LangVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	<DebugType>embedded</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
@@ -62,4 +63,5 @@
     <None Remove="iconContainer.png" />
     <EmbeddedResource Include="iconContainer.png" />
   </ItemGroup>
+  
 </Project>
