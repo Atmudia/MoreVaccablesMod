@@ -2,28 +2,28 @@
 
 namespace MoreVaccablesMod.Patches;
 
-[HarmonyPatch(typeof(PediaDirector), nameof(PediaDirector.MaybeShowPopup), typeof(IdentifiableType))]
+[HarmonyPatch(typeof(PediaDirector), nameof(PediaDirector.Unlock), typeof(IdentifiableType))]
 public static class PediaDirectorMaybeShowPopup
 {
-    public static bool Prefix(PediaDirector __instance, IdentifiableType identId)
+    public static bool Prefix(PediaDirector __instance, IdentifiableType identifiableType)
     {
-        if (identId.IsNull()) return true;
-        if (largoGroup.IsMember(identId))
+        if (identifiableType.IsNull()) return true;
+        if (largoGroup.IsMember(identifiableType))
         {
-            __instance.MaybeShowPopup(SRSingleton<SceneContext>.Instance.PlayerState.Vacuum.LargoSlimePediaEntry);
+            __instance.Unlock(SRSingleton<SceneContext>.Instance.PlayerState.VacuumItem.LargoSlimePediaEntry);
             return false;
         }
 
-        switch (identId.ReferenceId)
+        switch (identifiableType.ReferenceId)
         {
             case "SlimeDefinition.Lucky":
-                __instance.MaybeShowPopup(__instance.GetPediaId(identId));
+                __instance.Unlock(__instance.GetEntry(identifiableType));
                 return false;
             case "SlimeDefinition.Tarr":
-                __instance.MaybeShowPopup(__instance.GetPediaId(identId));
+                __instance.Unlock(__instance.GetEntry(identifiableType));
                 return false;
             case "SlimeDefinition.Gold":
-                __instance.MaybeShowPopup(__instance.GetPediaId(identId));
+                __instance.Unlock(__instance.GetEntry(identifiableType));
                 return false;
             default:
                 return true;
