@@ -42,7 +42,6 @@ public static class Patch_Ammo
         ammoSlot.transform.Find("Icon").gameObject.SetActive(true);
         ammoSlot.transform.Find("FirstSlime").gameObject.SetActive(false);
         ammoSlot.transform.Find("SecondSlime").gameObject.SetActive(false);
-        MelonLogger.Msg($"test {nameof(DecrementSelectedAmmo)}");
     }
     
 }
