@@ -6,30 +6,41 @@ using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using Il2CppInterop.Runtime;
+using Il2CppMonomiPark.SlimeRancher;
+using Il2CppMonomiPark.SlimeRancher.AdditionalContent.Epic;
+using Il2CppMonomiPark.SlimeRancher.Platform.AdditionalContent;
+using Il2CppMonomiPark.SlimeRancher.Player.PlayerItems;
 using Il2CppMonomiPark.SlimeRancher.Script.Util;
 using Il2CppMonomiPark.SlimeRancher.UI.Localization;
 using MelonLoader;
 using MoreVaccablesMod;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.AddressableAssets.ResourceProviders;
+using UnityEngine.ResourceManagement.ResourceProviders;
 using Object = UnityEngine.Object;
-[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.0.6", "KomiksPL", "https://www.nexusmods.com/slimerancher2/mods/42")]
+[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.0.7", "KomiksPL", "https://www.nexusmods.com/slimerancher2/mods/42")]
 namespace MoreVaccablesMod;
 
 public class EntryPoint : MelonMod
 {
     internal static IdentifiableTypeGroup largoGroup;
     internal static IdentifiableTypeGroup nonSlimesGroup;
-    private static Sprite iconLargoPedia;
-    private static Sprite iconContainer;
+    internal static Sprite iconLargoPedia;
+    internal static Sprite iconContainer;
     private MelonPreferences_Category MoreVaccablesMod;
     internal static MelonPreferences_Entry<bool> isTarrEnabled;
+    internal static MelonPreferences_Entry<bool> isToysEnabled;
 
-    public static List<SlimeDefinition> LateActivation = new List<SlimeDefinition>();
+    public static List<SlimeDefinition> LateActivation = [];
 
     public override void OnInitializeMelon()
     {
         MoreVaccablesMod = MelonPreferences.CreateCategory(nameof(MoreVaccablesMod));
-        isTarrEnabled = MoreVaccablesMod.CreateEntry<bool>("isTarrEnabled", true, "Is Tarr Enabled", "Should More Vaccable can vac Tarr Slime?");
+        isTarrEnabled = MoreVaccablesMod.CreateEntry<bool>("isTarrEnabled", true, "Is Tarr Enabled", "Should More Vaccable be able to vac Tarr Slime?");
+        isToysEnabled = MoreVaccablesMod.CreateEntry<bool>("isToysEnabled", true, "Is Toys Enabled", "Should More Vaccable be able to vac Toys?");
+        iconContainer ??= ConvertSprite(LoadImage("MoreVaccablesMod.iconContainer.png"));
+        
     }
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
@@ -43,38 +54,37 @@ public class EntryPoint : MelonMod
                     continue;
                 }
                 if (identifiableType.prefab != null)
-                    identifiableType.prefab.GetComponent<Vacuumable>().size = Vacuumable.Size.NORMAL;
+                    identifiableType.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
                 SetLargoIconAndPalette(identifiableType);
             }
         }
         
         if (!sceneName.Equals("GameCore")) return;
-        nonSlimesGroup ??= Get<IdentifiableTypeGroup>("NonSlimesGroup");
-        largoGroup ??= Get<IdentifiableTypeGroup>("LargoGroup");
-        iconLargoPedia ??= Get<Sprite>("iconLargoPedia");
-        iconContainer ??= ConvertSprite(LoadImage("MoreVaccablesMod.iconContainer.png"));
+        
+        
+        
         var identifiableTypeGroup = Get<IdentifiableTypeGroup>("VaccableBaseSlimeGroup");
-        nonSlimesGroup.memberGroups.Add(identifiableTypeGroup);
+        nonSlimesGroup._memberGroups.Add(identifiableTypeGroup);
         SlimeDefinition slimeGold = Get<SlimeDefinition>("Gold");
-        slimeGold.prefab.GetComponent<Vacuumable>().size = Vacuumable.Size.NORMAL;
+        slimeGold.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
         foreach (var slimeAppearance in slimeGold.AppearancesDefault)
             slimeGold.SetPalette(slimeAppearance);
         if (slimeGold.prefab.TryGetComponentButBetter<GoldSlimeFlee>(out var goldSlimeFlee))
             Object.Destroy(goldSlimeFlee);
-        identifiableTypeGroup.memberTypes.Add(slimeGold);
-        nonSlimesGroup.memberTypes.Add(slimeGold);
+        identifiableTypeGroup._memberTypes.Add(slimeGold);
+        nonSlimesGroup._memberTypes.Add(slimeGold);
 
         SlimeDefinition slimeLucky = Get<SlimeDefinition>("Lucky");
         foreach (var slimeAppearance in slimeLucky.AppearancesDefault)
             slimeLucky.SetPalette(slimeAppearance);
         if (slimeLucky.prefab.TryGetComponentButBetter<LuckySlimeFlee>(out var slimeLuckyFlee))
             Object.Destroy(slimeLuckyFlee);
-        identifiableTypeGroup.memberTypes.Add(slimeLucky);
-        nonSlimesGroup.memberTypes.Add(slimeLucky);
+        identifiableTypeGroup._memberTypes.Add(slimeLucky);
+        nonSlimesGroup._memberTypes.Add(slimeLucky);
         if (isTarrEnabled.Value)
         {
             SlimeDefinition slimeTarr = Get<SlimeDefinition>("Tarr");
-            slimeTarr.prefab.GetComponent<Vacuumable>().size = Vacuumable.Size.NORMAL;
+            slimeTarr.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
             foreach (var slimeAppearance in slimeTarr.AppearancesDefault)
             {
                 if (slimeAppearance.SaveSet == SlimeAppearance.AppearanceSaveSet.CLASSIC)
@@ -84,8 +94,8 @@ public class EntryPoint : MelonMod
                 slimeTarr.SetPalette(slimeAppearance);
             }
             slimeTarr.icon = Get<Sprite>("iconSlimeTarr");
-            identifiableTypeGroup.memberTypes.Add(slimeTarr); 
-            nonSlimesGroup.memberTypes.Add(slimeTarr);
+            identifiableTypeGroup._memberTypes.Add(slimeTarr); 
+            nonSlimesGroup._memberTypes.Add(slimeTarr);
         }
         ColorUtility.TryParseHtmlString("#75d9ff", out var potColor);
         var nonLiquids = Get<IdentifiableTypeGroup>("VaccableNonLiquids");
@@ -94,18 +104,19 @@ public class EntryPoint : MelonMod
         {
             if (identType.prefab.name.StartsWith("container"))
             {
-                identType.prefab.GetComponent<Vacuumable>().size = Vacuumable.Size.NORMAL;
+                identType.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
                 identType.icon = iconContainer;
                 identType.color = potColor;
                 identType.localizedName = localizedString;
-                nonLiquids.memberTypes.Add(identType);
+                nonLiquids._memberTypes.Add(identType);
 
             }
             
         }
         foreach (var identifiableType in new Il2CppSystem.Collections.Generic.List<IdentifiableType>(largoGroup.GetAllMembers()))
         {
-            
+            if (identifiableType.prefab != null)
+                identifiableType.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
             var type = identifiableType.TryCast<SlimeDefinition>();
             if (type == null)
                 continue;
@@ -116,14 +127,36 @@ public class EntryPoint : MelonMod
             }
             if (type.referenceId == null)
                 continue;
-            if (type.prefab != null)
-                type.prefab.GetComponent<Vacuumable>().size = Vacuumable.Size.NORMAL;
             SetLargoIconAndPalette(type);
+            // GameObject.CreatePrimitive(PrimitiveType.Sphere); 
             
         }
-        nonLiquids.memberGroups.Add(largoGroup);
-        nonSlimesGroup.memberGroups.Add(largoGroup);
 
+        if (isToysEnabled.Value)
+        {
+            var toyGroup = Get<IdentifiableTypeGroup>("ToyGroup");
+            foreach (var identifiableTypePediaObject in Resources.FindObjectsOfTypeAll<AdditionalContentCatalog>().Where(x => x.Toys != null &&  x.Toys.Asset != null).SelectMany(x => x.Toys.Asset.Cast<IdentifiableTypePediaLinkMap>().IdentifiableTypePediaObjectMap.ToArray()))
+            {
+                toyGroup._memberTypes.Add(identifiableTypePediaObject.IdentifiableType);
+
+            }
+            toyGroup._runtimeObject = null;
+            toyGroup.GetRuntimeObject();
+            foreach (var toyId in toyGroup._memberTypes )
+            {
+                if (toyId.prefab != null)
+                    toyId.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
+                if (toyId.icon != null)
+                    SetPalette(toyId);
+            }
+        }
+
+    }
+
+    public static void SetPalette(IdentifiableType type)
+    {
+        var colorAverage = AverageColorFromTexture(type.icon.texture);
+        type.color = colorAverage;
     }
     public static void SetLargoIconAndPalette(SlimeDefinition type)
     {
@@ -161,7 +194,51 @@ public class EntryPoint : MelonMod
         return averageColorFromArray;
 
     }
+    public static Color32 AverageColorFromTexture(Texture2D tex)
+    {
+        // Create a RenderTexture
+        RenderTexture renderTex = RenderTexture.GetTemporary(
+            tex.width,
+            tex.height,
+            0,
+            RenderTextureFormat.Default,
+            RenderTextureReadWrite.Linear);
 
+        // Blit the texture to the RenderTexture
+        Graphics.Blit(tex, renderTex);
+
+        // Create a new Texture2D and read the RenderTexture
+        RenderTexture previous = RenderTexture.active;
+        RenderTexture.active = renderTex;
+
+        Texture2D readableTex = new Texture2D(tex.width, tex.height);
+        readableTex.ReadPixels(new Rect(0, 0, renderTex.width, renderTex.height), 0, 0);
+        readableTex.Apply();
+
+        // Restore the previous RenderTexture
+        RenderTexture.active = previous;
+        RenderTexture.ReleaseTemporary(renderTex);
+
+        // Get the pixel colors
+        Color32[] texColors = readableTex.GetPixels32();
+        int total = texColors.Length;
+
+        float r = 0;
+        float g = 0;
+        float b = 0;
+
+        for (int i = 0; i < total; i++)
+        {
+            r += texColors[i].r;
+            g += texColors[i].g;
+            b += texColors[i].b;
+        }
+
+        // Clean up the temporary Texture2D
+        Object.Destroy(readableTex);
+
+        return new Color32((byte)(r / total), (byte)(g / total), (byte)(b / total), 255);
+    }
     public static T Get<T>(string name) where T : Object
     {
         return Resources.FindObjectsOfTypeAll<T>().FirstOrDefault(x => x.name == name);
