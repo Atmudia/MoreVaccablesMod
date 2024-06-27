@@ -7,7 +7,7 @@ using MelonLoader;
 using MoreVaccablesMod;
 using UnityEngine;
 using Object = UnityEngine.Object;
-[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.0.7", "KomiksPL", "https://www.nexusmods.com/slimerancher2/mods/42")]
+[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.0.8", "KomiksPL", "https://www.nexusmods.com/slimerancher2/mods/42")]
 namespace MoreVaccablesMod;
 
 public class EntryPoint : MelonMod
