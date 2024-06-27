@@ -1,12 +1,10 @@
 ﻿using System.Linq;
-using MelonLoader;
 using UnityEngine;
 
 namespace MoreVaccablesMod;
 
 public static class Extensions
 {
-    public static void Log(this object @object) => MelonLogger.Msg(@object.ToString());
     public static bool IsNull(this object @object) => @object == null;
     public static void SetPalette(this SlimeDefinition slimeDefinition, SlimeAppearance slimeAppearance)
     {
@@ -17,10 +15,10 @@ public static class Extensions
         slimeAppearance._colorPalette = colorPalette;
     }
 
-    public static bool TryGetComponentButBetter<T>(this GameObject @this, out T monoBehaviour) where T : MonoBehaviour
+    public static bool TryGetComponentButWorking<T>(this GameObject @this, out T monoBehaviour) where T : MonoBehaviour
     {
         var component = @this.GetComponent<T>();
-        if (component != null)
+        if (component)
         {
             monoBehaviour = component;
             return true;
@@ -37,16 +35,4 @@ public static class Extensions
         SlimeAppearance.AppearanceSaveSet.SECRET_STYLE => "SecretStyle",
         _ => null
     };
-        
-        
-        
-
-    public static string LogMultiple(this object @this, params object[] param)
-    {
-        string text = @this.ToString();
-        text = param.Aggregate(text, (current, obj) => current + ", " + obj.ToString());
-
-        MelonLogger.Msg(text);
-        return text;
-    }
 }

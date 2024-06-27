@@ -11,7 +11,7 @@ public static class Patch_AmmoSlot
     public static void Clear(Ammo.Slot __instance)
     {
         var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder.FirstOrDefault(x =>x.data.GetHashCode() == __instance.GetHashCode());
-        if (ammoSlotViewHolder == null) return;
+        if (!ammoSlotViewHolder) return;
         var ammoSlot = ammoSlotViewHolder.transform.Find("Ammo Slot").gameObject;
         ammoSlot.transform.Find("Icon").gameObject.SetActive(true);
         ammoSlot.transform.Find("FirstSlime").gameObject.SetActive(false);

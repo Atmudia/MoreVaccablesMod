@@ -15,7 +15,7 @@ public static class Patch_AmmoSlotViewHolder
     [HarmonyPatch(nameof(AmmoSlotViewHolder.Awake)), HarmonyPrefix]
     public static void Awake(AmmoSlotViewHolder __instance)
     {
-        if (ammoSlotViewHolder.Find(x => x == null))
+        if (ammoSlotViewHolder.Find(x => !x))
             ammoSlotViewHolder.Clear();
         ammoSlotViewHolder.Add(__instance);
         var ammoSlot = __instance.transform.Find("Ammo Slot");

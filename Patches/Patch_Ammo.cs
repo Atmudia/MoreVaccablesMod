@@ -13,7 +13,6 @@ public static class Patch_Ammo
     {
         if (!__result || !largoGroup.IsMember(id)) 
                 return;
-        MelonLogger.Msg("test");
         var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder.Find(x => x.data.Id == id);
         var ammoSlot = ammoSlotViewHolder.transform.Find("Ammo Slot").gameObject;
         ammoSlot.transform.Find("Icon").gameObject.SetActive(false);
@@ -32,7 +31,8 @@ public static class Patch_Ammo
     public static void DecrementSelectedAmmo(Ammo __instance, int amount)
     {
         var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder.FirstOrDefault(x =>x.data.Index == __instance.SelectedAmmoIndex);
-        if (ammoSlotViewHolder == null) return;
+        if (!ammoSlotViewHolder) 
+            return;
         if (!largoGroup.IsMember(ammoSlotViewHolder.data.Id))
             return;
         var dataCount = ammoSlotViewHolder.data.Count - amount;
