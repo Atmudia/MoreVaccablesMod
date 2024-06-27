@@ -17,18 +17,4 @@ public static class Patch_AmmoSlot
         ammoSlot.transform.Find("FirstSlime").gameObject.SetActive(false);
         ammoSlot.transform.Find("SecondSlime").gameObject.SetActive(false);
     }
-    [HarmonyPatch(nameof(Ammo.Slot.MaxCount), MethodType.Getter), HarmonyPostfix]
-    public static void MaxCount(Ammo.Slot __instance, ref int __result)
-    {
-        if (__instance.Id.IsNull()) return;
-        if (isTarrEnabled.Value && __instance.Id.ReferenceId.Equals("SlimeDefinition.Tarr"))
-        {
-            __result /= 2; 
-            return;
-        }
-        if (!largoGroup.IsMember(__instance.Id)) 
-            return;
-
-        __result /= 2;
-    }
 }
