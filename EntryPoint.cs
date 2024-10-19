@@ -8,30 +8,28 @@ using MelonLoader;
 using MoreVaccablesMod;
 using UnityEngine;
 using Object = UnityEngine.Object;
-[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.0.9", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
+[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.1.0", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
 [assembly: MelonGame("MonomiPark", "SlimeRancher2")]
 namespace MoreVaccablesMod;
 
 public class EntryPoint : MelonMod
 {
-    internal static IdentifiableTypeGroup largoGroup;
-    internal static IdentifiableTypeGroup nonSlimesGroup;
-    internal static Sprite iconLargoPedia;
-    internal static Sprite iconContainer;
-    private MelonPreferences_Category MoreVaccablesMod;
-    internal static MelonPreferences_Entry<bool> isTarrEnabled;
-    internal static MelonPreferences_Entry<bool> isToysEnabled;
+    internal static IdentifiableTypeGroup LargoGroup;
+    internal static IdentifiableTypeGroup NonSlimesGroup;
+    internal static Sprite IconLargoPedia;
+    internal static Sprite IconContainer;
+    private MelonPreferences_Category _moreVaccablesMod;
+    internal static MelonPreferences_Entry<bool> IsTarrEnabled;
+    internal static MelonPreferences_Entry<bool> IsToysEnabled;
     
     public static List<SlimeDefinition> LateActivation = [];
     public override void OnInitializeMelon()
     {
-        Melon<EntryPoint>.Instance.LoggerInstance.Msg("OnInitializeMelon");
-        
-        MoreVaccablesMod = MelonPreferences.CreateCategory(nameof(MoreVaccablesMod));
-        isTarrEnabled = MoreVaccablesMod.CreateEntry("isTarrEnabled", true, "Is Tarr Enabled", "Should More Vaccable be able to vac Tarr Slime?");
-        isToysEnabled = MoreVaccablesMod.CreateEntry("isToysEnabled", true, "Is Toys Enabled", "Should More Vaccable be able to vac Toys?");
-        iconContainer ??= ConvertSprite(LoadImage("MoreVaccablesMod.iconContainer.png"));
-        iconContainer.hideFlags |= HideFlags.HideAndDontSave;
+        _moreVaccablesMod = MelonPreferences.CreateCategory(nameof(_moreVaccablesMod));
+        IsTarrEnabled = _moreVaccablesMod.CreateEntry("isTarrEnabled", true, "Is Tarr Enabled", "Should More Vaccable be able to vac Tarr Slime?");
+        IsToysEnabled = _moreVaccablesMod.CreateEntry("isToysEnabled", true, "Is Toys Enabled", "Should More Vaccable be able to vac Toys?");
+        IconContainer ??= ConvertSprite(LoadImage("MoreVaccablesMod.iconContainer.png"));
+        IconContainer.hideFlags |= HideFlags.HideAndDontSave;
     }
     
     
@@ -67,9 +65,9 @@ public class EntryPoint : MelonMod
             type.color = splatColor;
             var colorPalette = slimeAppearance.ColorPalette;
             colorPalette.Ammo = splatColor;
-            slimeAppearance._icon = iconLargoPedia;
+            slimeAppearance._icon = IconLargoPedia;
             slimeAppearance._colorPalette = colorPalette; 
-            type.icon = iconLargoPedia;
+            type.icon = IconLargoPedia;
         }
            
     }

@@ -35,7 +35,7 @@ public static class Patch_AmmoSlotViewHolder
     [HarmonyPatch(nameof(AmmoSlotViewHolder.UpdateAmmoDisplay)), HarmonyPrefix]
     public static void UpdateAmmoDisplay(AmmoSlotViewHolder __instance, Ammo.Slot data)
     {
-        if (!largoGroup.IsMember(data.Id)) return;
+        if (!LargoGroup.IsMember(data.Id)) return;
         if (data.Count == 0) return;
         var ammoSlot = __instance.transform.Find("Ammo Slot").gameObject;
         var firstSlime = ammoSlot.transform.Find("FirstSlime").gameObject;

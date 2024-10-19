@@ -8,12 +8,12 @@ public static class PediaDirectorMaybeShowPopup
     public static bool Prefix(PediaDirector __instance, IdentifiableType identifiableType)
     {
         if (identifiableType.IsNull()) return true;
-        if (largoGroup.IsMember(identifiableType))
+        if (LargoGroup.IsMember(identifiableType))
         {
             __instance.Unlock(SRSingleton<SceneContext>.Instance.PlayerState.VacuumItem.LargoSlimePediaEntry);
             return false;
         }
-
+        
         switch (identifiableType.ReferenceId)
         {
             case "SlimeDefinition.Lucky":

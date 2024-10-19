@@ -14,8 +14,8 @@ public static class Patch_StorageSlotUI
     public static void SetImageSprite(StorageSlotUI __instance, Image image, Sprite sprite)
     {
         var identifiableType = __instance.GetCurrentId();
-        if (!largoGroup.IsMember(identifiableType)) return;
-        
+        if (!LargoGroup.IsMember(identifiableType)) 
+            return;
         var ammoSlot = __instance.bar.transform.gameObject;
         var icon = ammoSlot.transform.Find("Icon").gameObject;
         var firstSlime = ammoSlot.transform.Find("FirstSlime");

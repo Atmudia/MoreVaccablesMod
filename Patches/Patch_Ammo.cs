@@ -11,7 +11,7 @@ public static class Patch_Ammo
     [HarmonyPatch(nameof(Ammo.MaybeAddToSlot)), HarmonyPrefix]
     public static void MaybeAddToSlot(Ammo __instance, IdentifiableType id, Identifiable identifiable, ref bool __result)
     {
-        if (!__result || !largoGroup.IsMember(id)) 
+        if (!__result || !LargoGroup.IsMember(id)) 
                 return;
         var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder.Find(x => x.data.Id == id);
         var ammoSlot = ammoSlotViewHolder.transform.Find("Ammo Slot").gameObject;
@@ -33,7 +33,7 @@ public static class Patch_Ammo
         var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder.FirstOrDefault(x =>x.data.Index == __instance.SelectedAmmoIndex);
         if (!ammoSlotViewHolder) 
             return;
-        if (!largoGroup.IsMember(ammoSlotViewHolder.data.Id))
+        if (!LargoGroup.IsMember(ammoSlotViewHolder.data.Id))
             return;
         var dataCount = ammoSlotViewHolder.data.Count - amount;
         if (dataCount > 1)

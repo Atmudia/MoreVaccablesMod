@@ -11,7 +11,7 @@ public class Patch_VacuumItem
 {
     public static void Prefix(GameObject toExpel)
     {
-        if (IdentifiableType.TryGetId(toExpel, out var type) && EntryPoint.largoGroup.IsMember(type))
+        if (IdentifiableType.TryGetId(toExpel, out var type) && LargoGroup.IsMember(type))
             Patch_SlimeAppearanceApplicator.IsExpeled = true;
     }
 }
@@ -21,7 +21,7 @@ public class Patch_SlimeFeral
     public static void Prefix(SlimeFeral __instance)
     {
 
-        if (largoGroup.IsMember(__instance.GetComponent<IdentifiableActor>().identType))
+        if (LargoGroup.IsMember(__instance.GetComponent<IdentifiableActor>().identType))
         {
             __instance.gameObject.GetComponent<Vacuumable>().size = VacuumableSize.LARGE;
         }
@@ -29,7 +29,7 @@ public class Patch_SlimeFeral
     public static void Postfix(SlimeFeral __instance)
     {
 
-        if (largoGroup.IsMember(__instance.GetComponent<IdentifiableActor>().identType))
+        if (LargoGroup.IsMember(__instance.GetComponent<IdentifiableActor>().identType))
         {
             __instance.gameObject.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
         }

@@ -27,12 +27,4 @@ public static class Extensions
         monoBehaviour = null;
         return false;
     }
-
-    public static string GetStringForSaveSet(this SlimeAppearance.AppearanceSaveSet saveSet) => saveSet switch
-    {
-        SlimeAppearance.AppearanceSaveSet.NONE => "Classic",
-        SlimeAppearance.AppearanceSaveSet.CLASSIC => "Classic",
-        SlimeAppearance.AppearanceSaveSet.SECRET_STYLE => "SecretStyle",
-        _ => null
-    };
 }
