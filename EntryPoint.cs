@@ -2,12 +2,14 @@
 global using static MoreVaccablesMod.EntryPoint;
 using System.Collections.Generic;
 using System.Linq;
+using HarmonyLib;
 using Il2CppMonomiPark.SlimeRancher;
 using MelonLoader;
 using MoreVaccablesMod;
 using UnityEngine;
 using Object = UnityEngine.Object;
-[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.0.8", "KomiksPL", "https://www.nexusmods.com/slimerancher2/mods/42")]
+[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.0.9", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
+[assembly: MelonGame("MonomiPark", "SlimeRancher2")]
 namespace MoreVaccablesMod;
 
 public class EntryPoint : MelonMod
@@ -19,18 +21,21 @@ public class EntryPoint : MelonMod
     private MelonPreferences_Category MoreVaccablesMod;
     internal static MelonPreferences_Entry<bool> isTarrEnabled;
     internal static MelonPreferences_Entry<bool> isToysEnabled;
-
+    
     public static List<SlimeDefinition> LateActivation = [];
-
     public override void OnInitializeMelon()
     {
+        Melon<EntryPoint>.Instance.LoggerInstance.Msg("OnInitializeMelon");
+        
         MoreVaccablesMod = MelonPreferences.CreateCategory(nameof(MoreVaccablesMod));
-        isTarrEnabled = MoreVaccablesMod.CreateEntry<bool>("isTarrEnabled", true, "Is Tarr Enabled", "Should More Vaccable be able to vac Tarr Slime?");
-        isToysEnabled = MoreVaccablesMod.CreateEntry<bool>("isToysEnabled", true, "Is Toys Enabled", "Should More Vaccable be able to vac Toys?");
+        isTarrEnabled = MoreVaccablesMod.CreateEntry("isTarrEnabled", true, "Is Tarr Enabled", "Should More Vaccable be able to vac Tarr Slime?");
+        isToysEnabled = MoreVaccablesMod.CreateEntry("isToysEnabled", true, "Is Toys Enabled", "Should More Vaccable be able to vac Toys?");
         iconContainer ??= ConvertSprite(LoadImage("MoreVaccablesMod.iconContainer.png"));
         iconContainer.hideFlags |= HideFlags.HideAndDontSave;
-
     }
+    
+    
+    
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
         if (sceneName.Equals("zoneCore"))
@@ -42,7 +47,7 @@ public class EntryPoint : MelonMod
                     MelonLogger.Msg($"Can't add modded largo to be vaccable: {identifiableType.ReferenceId}");
                     continue;
                 }
-                if (identifiableType.prefab != null)
+                if (identifiableType.prefab)
                     identifiableType.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
                 SetLargoIconAndPalette(identifiableType);
             }
@@ -56,10 +61,9 @@ public class EntryPoint : MelonMod
     }
     public static void SetLargoIconAndPalette(SlimeDefinition type)
     {
-      
         foreach (var slimeAppearance in type.AppearancesDefault)
         {
-            var splatColor = AverageColorFromArray(type.BaseSlimes[0].AppearancesDefault[0].SplatColor, type.BaseSlimes[1].AppearancesDefault[0].SplatColor);
+            var splatColor = AverageColorFromArray(type.BaseSlimes[0]!.AppearancesDefault[0]!.SplatColor, type.BaseSlimes[1]!.AppearancesDefault[0]!.SplatColor);
             type.color = splatColor;
             var colorPalette = slimeAppearance.ColorPalette;
             colorPalette.Ammo = splatColor;
@@ -71,7 +75,6 @@ public class EntryPoint : MelonMod
     }
     public static Color32 AverageColorFromArray(params Color32[] color32)
     {
-
         int total = color32.Length;
         float r = 0;
         float g = 0;
@@ -149,12 +152,25 @@ public class EntryPoint : MelonMod
     public Texture2D LoadImage(string image)
     {
         var manifestResourceStream = MelonAssembly.Assembly.GetManifestResourceStream(image);
-        var bytes = new byte[manifestResourceStream.Length];
-        _ = manifestResourceStream.Read(bytes);
+        if (manifestResourceStream != null)
+        {
+            var bytes = new byte[manifestResourceStream.Length];
+            _ = manifestResourceStream.Read(bytes);
         
-        var texture2D = new Texture2D(1, 1);
-        ImageConversion.LoadImage(texture2D, bytes);
-        return texture2D;
+            var texture2D = new Texture2D(1, 1);
+            ImageConversion.LoadImage(texture2D, bytes);
+            return texture2D;
+        }
 
+        return null;
+    }
+}
+[HarmonyPatch("Il2CppInterop.HarmonySupport.Il2CppDetourMethodPatcher", "ReportException")]
+public static class Patch_Il2CppDetourMethodPatcher
+{
+    public static bool Prefix(System.Exception ex)
+    {
+        MelonLogger.Error("During invoking native->managed trampoline", ex);
+        return false;                               
     }
 }

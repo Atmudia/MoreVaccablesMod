@@ -39,8 +39,8 @@ public static class Patch_StorageSlotUI
         var slimeDefinition = identifiableType.Cast<SlimeDefinition>();
         var firstSlimeDefinition = slimeDefinition.BaseSlimes[0];
         var secondSlimeDefinition = slimeDefinition.BaseSlimes[1];
-        firstSlime.GetComponent<Image>().sprite = firstSlimeDefinition.icon;
-        secondSlime.GetComponent<Image>().sprite = secondSlimeDefinition.icon;
+        if (firstSlimeDefinition) firstSlime.GetComponent<Image>().sprite = firstSlimeDefinition.icon;
+        if (secondSlimeDefinition) secondSlime.GetComponent<Image>().sprite = secondSlimeDefinition.icon;
         firstSlime.gameObject.SetActive(true);
         secondSlime.gameObject.SetActive(true);
         icon.gameObject.SetActive(false);

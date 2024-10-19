@@ -71,7 +71,7 @@
     <EmbeddedResource Include="iconContainer.png" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="cp  &quot;/data/Modding/SlimeRancher/SR2/MoreVaccablesMod/bin/Debug/net6.0/MoreVaccablesMod.dll&quot;  &quot;/home/komik/.local/share/Steam/steamapps/common/Slime Rancher 2/Mods/MoreVaccablesMod.dll&quot;" />
+    <Exec Command="cp  &quot;/HDD/Modding/SlimeRancher/SR2/MoreVaccablesMod/bin/Debug/net6.0/MoreVaccablesMod.dll&quot;  &quot;/home/komik/.local/share/Steam/steamapps/common/Slime Rancher 2/Mods/&quot;" />
   </Target>
   
 </Project>

@@ -17,6 +17,6 @@ public static class Patch_LocalizationDirector
     public static IEnumerator LoadTable(LocalizationDirector localizationDirector)
     {
         yield return new WaitForSeconds(0.1f);
-        localizationDirector.Tables["Actor"].AddEntry("l.container_case", "Pot");
+        localizationDirector.Tables["Actor"].AddEntry("l.pot", "Pot");
     }
 }

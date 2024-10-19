@@ -3,10 +3,11 @@ using MelonLoader;
 
 namespace MoreVaccablesMod.Patches;
 
-[HarmonyPatch(typeof(AmmoModel), nameof(AmmoModel.GetSlotMaxCount))]
+[HarmonyPatch(typeof(AmmoModel))]
 public static class Patch_AmmoModel
 {
-    public static void Postfix(IdentifiableType id, ref int __result)
+    [HarmonyPatch(nameof(GetSlotMaxCount)), HarmonyPostfix]
+    public static void GetSlotMaxCount(IdentifiableType id, ref int __result)
     {
         if (id.IsNull()) return;
         if (isTarrEnabled.Value && id.ReferenceId.Equals("SlimeDefinition.Tarr"))

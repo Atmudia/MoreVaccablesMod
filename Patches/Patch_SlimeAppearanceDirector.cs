@@ -1,11 +1,13 @@
 ﻿using HarmonyLib;
+using MelonLoader;
 
 namespace MoreVaccablesMod.Patches;
 
-[HarmonyPatch(typeof(SlimeAppearanceDirector), nameof(SlimeAppearanceDirector.GetSpecificSlimeAppearance))]
+[HarmonyPatch(typeof(SlimeAppearanceDirector))]
 public static class Patch_SlimeAppearanceDirector
 {
-    public static bool Prefix(SlimeAppearanceDirector __instance, IdentifiableType slimeId, SlimeAppearance.AppearanceSaveSet saveSet, ref SlimeAppearance __result)
+    [HarmonyPatch(nameof(GetSpecificSlimeAppearance)), HarmonyPrefix]
+    public static bool GetSpecificSlimeAppearance(SlimeAppearanceDirector __instance, IdentifiableType slimeId, SlimeAppearance.AppearanceSaveSet saveSet, ref SlimeAppearance __result)
     {
         largoGroup ??= Get<IdentifiableTypeGroup>("LargoGroup");
         if (!largoGroup.IsMember(slimeId))
