@@ -8,13 +8,14 @@ using MelonLoader;
 using MoreVaccablesMod;
 using UnityEngine;
 using Object = UnityEngine.Object;
-[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.1.0", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
+[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.1.1", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
 [assembly: MelonGame("MonomiPark", "SlimeRancher2")]
 namespace MoreVaccablesMod;
 
 public class EntryPoint : MelonMod
 {
     internal static IdentifiableTypeGroup LargoGroup;
+    internal static IdentifiableTypeGroup VaccableBaseSlimeGroup;
     internal static IdentifiableTypeGroup NonSlimesGroup;
     internal static Sprite IconLargoPedia;
     internal static Sprite IconContainer;
@@ -31,8 +32,6 @@ public class EntryPoint : MelonMod
         IconContainer ??= ConvertSprite(LoadImage("MoreVaccablesMod.iconContainer.png"));
         IconContainer.hideFlags |= HideFlags.HideAndDontSave;
     }
-    
-    
     
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {

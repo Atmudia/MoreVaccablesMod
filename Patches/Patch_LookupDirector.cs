@@ -16,7 +16,9 @@ public static class Patch_LookupDirector
     public static void Awake(LookupDirector __instance)
     {
 
-        NonSlimesGroup ??= Get<IdentifiableTypeGroup>("VaccableBaseSlimeGroup");
+        VaccableBaseSlimeGroup ??= Get<IdentifiableTypeGroup>("VaccableBaseSlimeGroup");
+        NonSlimesGroup ??= Get<IdentifiableTypeGroup>("NonSlimesGroup");
+        
         LargoGroup ??= Get<IdentifiableTypeGroup>("LargoGroup");
         IconLargoPedia ??= Get<Sprite>("iconLargoPedia");
         
@@ -39,7 +41,7 @@ public static class Patch_LookupDirector
 
         }
         
-        NonSlimesGroup._memberGroups.Add(LargoGroup);
+        VaccableBaseSlimeGroup._memberGroups.Add(LargoGroup);
         
         SlimeDefinition slimeGold = Get<SlimeDefinition>("Gold");
         slimeGold.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
@@ -47,7 +49,7 @@ public static class Patch_LookupDirector
             slimeGold.SetPalette(slimeAppearance);
         if (slimeGold.prefab.TryGetComponentButWorking<GoldSlimeFlee>(out var goldSlimeFlee))
             Object.Destroy(goldSlimeFlee);
-        NonSlimesGroup._memberTypes.Add(slimeGold);
+        VaccableBaseSlimeGroup._memberTypes.Add(slimeGold);
         
         SlimeDefinition slimeLucky = Get<SlimeDefinition>("Lucky");
         foreach (var slimeAppearance in slimeLucky.AppearancesDefault)
@@ -60,7 +62,7 @@ public static class Patch_LookupDirector
         }
         if (slimeLucky.prefab.TryGetComponentButWorking<LuckySlimeFlee>(out var slimeLuckyFlee))
             Object.Destroy(slimeLuckyFlee);
-        NonSlimesGroup._memberTypes.Add(slimeLucky);
+        VaccableBaseSlimeGroup._memberTypes.Add(slimeLucky);
         if (IsTarrEnabled.Value)
         {
             SlimeDefinition slimeTarr = Get<SlimeDefinition>("Tarr");
@@ -74,21 +76,17 @@ public static class Patch_LookupDirector
                 slimeTarr.SetPalette(slimeAppearance);
             }
             slimeTarr.icon = Get<Sprite>("iconSlimeTarr");
-            NonSlimesGroup._memberTypes.Add(slimeTarr);
+            VaccableBaseSlimeGroup._memberTypes.Add(slimeTarr);
         }
         ColorUtility.TryParseHtmlString("#75d9ff", out var potColor);
         var localizedString = LocalizationUtil.CreateByKey("Actor", "l.pot");
-        foreach (var identType in Resources.FindObjectsOfTypeAll<IdentifiableType>().Where(x => x.prefab))
+        foreach (var identType in Resources.FindObjectsOfTypeAll<IdentifiableType>().Where(x => x.prefab && x.prefab.name.StartsWith("container")))
         {
-            if (identType.prefab.name.StartsWith("container"))
-            {
-                identType.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
-                identType.icon = IconContainer;
-                identType.color = potColor;
-                identType.localizedName = localizedString;
-                NonSlimesGroup._memberTypes.Add(identType);
-        
-            }
+            identType.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
+            identType.icon = IconContainer;
+            identType.color = potColor;
+            identType.localizedName = localizedString;
+            VaccableBaseSlimeGroup._memberTypes.Add(identType);
             
         }
         if (IsToysEnabled.Value)
@@ -107,12 +105,13 @@ public static class Patch_LookupDirector
                 if (toyId.icon)
                     SetPalette(toyId);
             }
-            NonSlimesGroup._memberGroups.Add(toyGroup);
+            VaccableBaseSlimeGroup._memberGroups.Add(toyGroup);
         }
-        NonSlimesGroup._memberGroups.Add(LargoGroup);
-        
-        __instance._identifiableTypeGroupMap[NonSlimesGroup]._memberTypes = NonSlimesGroup._memberTypes;
+        NonSlimesGroup._memberGroups.Add(VaccableBaseSlimeGroup);
         __instance._identifiableTypeGroupMap[NonSlimesGroup]._memberGroups = NonSlimesGroup._memberGroups;
+        __instance._identifiableTypeGroupMap[NonSlimesGroup]._memberTypes = NonSlimesGroup._memberTypes;
+        __instance._identifiableTypeGroupMap[VaccableBaseSlimeGroup]._memberTypes = VaccableBaseSlimeGroup._memberTypes;
+        __instance._identifiableTypeGroupMap[VaccableBaseSlimeGroup]._memberGroups = VaccableBaseSlimeGroup._memberGroups;
     }
     
     
