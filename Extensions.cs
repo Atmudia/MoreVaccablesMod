@@ -5,7 +5,18 @@ namespace MoreVaccablesMod;
 
 public static class Extensions
 {
-    public static bool IsNull(this object @object) => @object == null;
+    public static string GetFullName(this GameObject obj)
+    {
+        string str = obj.name;
+        for (Transform parent = obj.transform.parent;
+             parent != null;
+             parent = parent.parent)
+        {
+            str = parent.gameObject.name + "/" + str;
+        }
+
+        return str;
+    }
     public static void SetPalette(this SlimeDefinition slimeDefinition, SlimeAppearance slimeAppearance)
     {
         var splatColor = slimeAppearance.SplatColor;

@@ -3,8 +3,6 @@ using HarmonyLib;
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.Platform.AdditionalContent;
 using Il2CppMonomiPark.SlimeRancher.Script.Util;
-using Il2CppSystem.Collections.Generic;
-using MelonLoader;
 using UnityEngine;
 
 namespace MoreVaccablesMod.Patches;
@@ -25,7 +23,7 @@ public static class Patch_LookupDirector
         foreach (var identifiableType in new Il2CppSystem.Collections.Generic.List<IdentifiableType>(LargoGroup.GetAllMembers()))
         {
             if (identifiableType.prefab)
-                identifiableType.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
+                identifiableType.prefab.GetComponent<Vacuumable>().Size = VacuumableSize.NORMAL;
             var type = identifiableType.TryCast<SlimeDefinition>();
             if (!type)
                 continue;
@@ -37,14 +35,12 @@ public static class Patch_LookupDirector
             if (type.referenceId == null)
                 continue;
             SetLargoIconAndPalette(type);
-
-
         }
         
         VaccableBaseSlimeGroup._memberGroups.Add(LargoGroup);
         
         SlimeDefinition slimeGold = Get<SlimeDefinition>("Gold");
-        slimeGold.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
+        slimeGold.prefab.GetComponent<Vacuumable>().Size = VacuumableSize.NORMAL;
         foreach (var slimeAppearance in slimeGold.AppearancesDefault)
             slimeGold.SetPalette(slimeAppearance);
         if (slimeGold.prefab.TryGetComponentButWorking<GoldSlimeFlee>(out var goldSlimeFlee))
@@ -63,10 +59,21 @@ public static class Patch_LookupDirector
         if (slimeLucky.prefab.TryGetComponentButWorking<LuckySlimeFlee>(out var slimeLuckyFlee))
             Object.Destroy(slimeLuckyFlee);
         VaccableBaseSlimeGroup._memberTypes.Add(slimeLucky);
+
+        SlimeDefinition slimeShadow = Get<SlimeDefinition>("Shadow");
+        foreach (var slimeAppearance in slimeLucky.AppearancesDefault)
+        {
+            ColorUtility.TryParseHtmlString("#15314d", out var luckyColor);
+            var colorPalette = slimeAppearance.ColorPalette;
+            colorPalette.Ammo = luckyColor;
+            slimeShadow.color = luckyColor;
+            slimeAppearance._colorPalette = colorPalette;
+        }
+        VaccableBaseSlimeGroup._memberTypes.Add(slimeShadow);
         if (IsTarrEnabled.Value)
         {
             SlimeDefinition slimeTarr = Get<SlimeDefinition>("Tarr");
-            slimeTarr.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
+            slimeTarr.prefab.GetComponent<Vacuumable>().Size = VacuumableSize.NORMAL;
             foreach (var slimeAppearance in slimeTarr.AppearancesDefault)
             {
                 if (slimeAppearance.SaveSet == SlimeAppearance.AppearanceSaveSet.CLASSIC)
@@ -82,7 +89,7 @@ public static class Patch_LookupDirector
         var localizedString = LocalizationUtil.CreateByKey("Actor", "l.pot");
         foreach (var identType in Resources.FindObjectsOfTypeAll<IdentifiableType>().Where(x => x.prefab && x.prefab.name.StartsWith("container")))
         {
-            identType.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
+            identType.prefab.GetComponent<Vacuumable>().Size = VacuumableSize.NORMAL;
             identType.icon = IconContainer;
             identType.color = potColor;
             identType.localizedName = localizedString;
@@ -101,7 +108,7 @@ public static class Patch_LookupDirector
             foreach (var toyId in toyGroup._memberTypes )
             {
                 if (toyId.prefab)
-                    toyId.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
+                    toyId.prefab.GetComponent<Vacuumable>().Size = VacuumableSize.NORMAL;
                 if (toyId.icon)
                     SetPalette(toyId);
             }

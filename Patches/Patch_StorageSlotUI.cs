@@ -1,5 +1,5 @@
 ﻿using HarmonyLib;
-using Il2CppInterop.Runtime.Injection;
+using Il2CppMonomiPark.SlimeRancher.Persist;
 using Il2CppMonomiPark.SlimeRancher.UI;
 using MelonLoader;
 using UnityEngine;
@@ -23,6 +23,7 @@ public static class Patch_StorageSlotUI
         if (!firstSlime)
         {
             var slime1 = Object.Instantiate(icon, ammoSlot.transform).GetComponent<RectTransform>();
+            slime1.GetComponent<Image>().enabled = true;
             slime1.name = "FirstSlime";
             slime1.sizeDelta /= 1.6f;
             slime1.anchoredPosition = new Vector2(9, 35);
@@ -31,6 +32,7 @@ public static class Patch_StorageSlotUI
         if (!secondSlime)
         {
             var slime1 = Object.Instantiate(icon, ammoSlot.transform).GetComponent<RectTransform>();
+            slime1.GetComponent<Image>().enabled = true;
             slime1.name = "SecondSlime";
             slime1.sizeDelta /= 1.6f;
             slime1.anchoredPosition = new Vector2(-13.5f, -6.3f);
@@ -44,6 +46,7 @@ public static class Patch_StorageSlotUI
         firstSlime.gameObject.SetActive(true);
         secondSlime.gameObject.SetActive(true);
         icon.gameObject.SetActive(false);
+        MelonLogger.Msg(__instance.gameObject.GetFullName());
     }
 
     [HarmonyPatch(nameof(Clear)), HarmonyPrefix]

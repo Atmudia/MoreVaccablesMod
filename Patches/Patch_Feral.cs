@@ -1,7 +1,6 @@
 using HarmonyLib;
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.Player.PlayerItems;
-using MelonLoader;
 using UnityEngine;
 
 namespace MoreVaccablesMod.Patches;
@@ -20,18 +19,16 @@ public class Patch_SlimeFeral
 {
     public static void Prefix(SlimeFeral __instance)
     {
-
         if (LargoGroup.IsMember(__instance.GetComponent<IdentifiableActor>().identType))
         {
-            __instance.gameObject.GetComponent<Vacuumable>().size = VacuumableSize.LARGE;
+            __instance.gameObject.GetComponent<Vacuumable>().Size = VacuumableSize.LARGE;
         }
     }
     public static void Postfix(SlimeFeral __instance)
     {
-
         if (LargoGroup.IsMember(__instance.GetComponent<IdentifiableActor>().identType))
         {
-            __instance.gameObject.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
+            __instance.gameObject.GetComponent<Vacuumable>().Size = VacuumableSize.NORMAL;
         }
     }
 }

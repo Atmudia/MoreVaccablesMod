@@ -20,12 +20,15 @@ public static class Patch_AmmoSlotViewHolder
         ammoSlotViewHolder.Add(__instance);
         var ammoSlot = __instance.transform.Find("Ammo Slot");
         var icon = ammoSlot.transform.Find("Icon");
-        
         var slime1 = Object.Instantiate(icon, ammoSlot.transform).GetComponent<RectTransform>();
         slime1.name = "FirstSlime";
+        slime1.GetComponent<Image>().enabled = true;
+
         slime1.sizeDelta /= 1.6f;
         slime1.anchoredPosition = new Vector2(9, 35);
         var slime2 = Object.Instantiate(icon, ammoSlot.transform).GetComponent<RectTransform>();
+        slime2.GetComponent<Image>().enabled = true;
+
         slime2.name = "SecondSlime";
         slime2.sizeDelta /= 1.6f;
         slime2.anchoredPosition = new Vector2(-13.5f, -6.3f);
@@ -47,8 +50,9 @@ public static class Patch_AmmoSlotViewHolder
         var secondSlimeDefinition = slimeDefinition.BaseSlimes[1];
         if (firstSlimeDefinition) firstSlime.GetComponent<Image>().sprite = firstSlimeDefinition.icon;
         if (secondSlimeDefinition) secondSlime.GetComponent<Image>().sprite = secondSlimeDefinition.icon;
-        firstSlime.gameObject.SetActive(true);
-        secondSlime.gameObject.SetActive(true);
+        
+        firstSlime.SetActive(true);
+        secondSlime.SetActive(true);
         
     }
 }

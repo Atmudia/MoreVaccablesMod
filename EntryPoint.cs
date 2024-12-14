@@ -2,13 +2,13 @@
 global using static MoreVaccablesMod.EntryPoint;
 using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
 using Il2CppMonomiPark.SlimeRancher;
 using MelonLoader;
 using MoreVaccablesMod;
 using UnityEngine;
 using Object = UnityEngine.Object;
-[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.1.1", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
+
+[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.2", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
 [assembly: MelonGame("MonomiPark", "SlimeRancher2")]
 namespace MoreVaccablesMod;
 
@@ -31,26 +31,25 @@ public class EntryPoint : MelonMod
         IsToysEnabled = _moreVaccablesMod.CreateEntry("isToysEnabled", true, "Is Toys Enabled", "Should More Vaccable be able to vac Toys?");
         IconContainer ??= ConvertSprite(LoadImage("MoreVaccablesMod.iconContainer.png"));
         IconContainer.hideFlags |= HideFlags.HideAndDontSave;
+        
     }
     
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
-        if (sceneName.Equals("zoneCore"))
+        if (!sceneName.Equals("zoneCore"))
+            return;
+        foreach (var identifiableType in LateActivation)
         {
-            foreach (var identifiableType in LateActivation)
+            if (identifiableType.AppearancesDefault == null)
             {
-                if (identifiableType.AppearancesDefault == null)
-                {
-                    MelonLogger.Msg($"Can't add modded largo to be vaccable: {identifiableType.ReferenceId}");
-                    continue;
-                }
-                if (identifiableType.prefab)
-                    identifiableType.prefab.GetComponent<Vacuumable>().size = VacuumableSize.NORMAL;
-                SetLargoIconAndPalette(identifiableType);
+                MelonLogger.Msg($"Can't add modded largo to be vaccable: {identifiableType.ReferenceId}");
+                continue;
             }
+            if (identifiableType.prefab)
+                identifiableType.prefab.GetComponent<Vacuumable>().Size = VacuumableSize.NORMAL;
+            SetLargoIconAndPalette(identifiableType);
         }
     }
-
     public static void SetPalette(IdentifiableType type)
     {
         var colorAverage = AverageColorFromTexture(type.icon.texture);
@@ -160,14 +159,5 @@ public class EntryPoint : MelonMod
         }
 
         return null;
-    }
-}
-[HarmonyPatch("Il2CppInterop.HarmonySupport.Il2CppDetourMethodPatcher", "ReportException")]
-public static class Patch_Il2CppDetourMethodPatcher
-{
-    public static bool Prefix(System.Exception ex)
-    {
-        MelonLogger.Error("During invoking native->managed trampoline", ex);
-        return false;                               
     }
 }
