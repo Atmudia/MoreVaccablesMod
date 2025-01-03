@@ -11,10 +11,11 @@ This mod is port of Slime Rancher 1 Mod: [Link](https://www.nexusmods.com/slimer
 
 ## Features
 
-- Allows you to pick up gold and lucky, tarr slimes without them fleeing.
+- Allows you to pick up gold, lucky, tarr slimes and shadow slimes without them fleeing.
 - Lets you pick up largos, crates and store them in silos.
 - Powered by MelonLoader 0.6.1+
 - Can disable the tarr vaccable with config
+- Can enable slime fleeing with config
 
 Enjoy the enhanced gameplay experience with this mod!
 

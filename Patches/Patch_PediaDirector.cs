@@ -25,6 +25,9 @@ public static class PediaDirectorMaybeShowPopup
             case "SlimeDefinition.Gold":
                 __instance.Unlock(__instance.GetEntry(identifiableType));
                 return false;
+            case "SlimeDefinition.Shadow":
+                __instance.Unlock(__instance.GetEntry(identifiableType));
+                return false;
             default:
                 return true;
         }

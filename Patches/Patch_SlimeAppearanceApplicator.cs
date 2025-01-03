@@ -5,13 +5,13 @@ namespace MoreVaccablesMod.Patches;
 [HarmonyPatch(typeof(SlimeAppearanceApplicator))]
 public class Patch_SlimeAppearanceApplicator
 {
-    public static bool IsExpeled;
+    internal static bool IsExpelled;
     [HarmonyPatch(nameof(SetExpression)), HarmonyPrefix]
     public static void SetExpression(SlimeAppearanceApplicator __instance)
     {
-        if (!__instance.Appearance && IsExpeled)
+        if (!__instance.Appearance && IsExpelled)
         {
-            IsExpeled = false;
+            IsExpelled = false;
             __instance.Awake();
         }
     }

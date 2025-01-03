@@ -46,7 +46,6 @@ public static class Patch_StorageSlotUI
         firstSlime.gameObject.SetActive(true);
         secondSlime.gameObject.SetActive(true);
         icon.gameObject.SetActive(false);
-        MelonLogger.Msg(__instance.gameObject.GetFullName());
     }
 
     [HarmonyPatch(nameof(Clear)), HarmonyPrefix]

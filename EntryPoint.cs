@@ -2,13 +2,13 @@
 global using static MoreVaccablesMod.EntryPoint;
 using System.Collections.Generic;
 using System.Linq;
-using Il2CppMonomiPark.SlimeRancher;
 using MelonLoader;
 using MoreVaccablesMod;
+using MoreVaccablesMod.Patches;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.2", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
+[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.3.1", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
 [assembly: MelonGame("MonomiPark", "SlimeRancher2")]
 namespace MoreVaccablesMod;
 
@@ -22,6 +22,7 @@ public class EntryPoint : MelonMod
     private MelonPreferences_Category _moreVaccablesMod;
     internal static MelonPreferences_Entry<bool> IsTarrEnabled;
     internal static MelonPreferences_Entry<bool> IsToysEnabled;
+    internal static MelonPreferences_Entry<bool> IsSlimeFleeingEnabled;
     
     public static List<SlimeDefinition> LateActivation = [];
     public override void OnInitializeMelon()
@@ -29,27 +30,25 @@ public class EntryPoint : MelonMod
         _moreVaccablesMod = MelonPreferences.CreateCategory(nameof(_moreVaccablesMod));
         IsTarrEnabled = _moreVaccablesMod.CreateEntry("isTarrEnabled", true, "Is Tarr Enabled", "Should More Vaccable be able to vac Tarr Slime?");
         IsToysEnabled = _moreVaccablesMod.CreateEntry("isToysEnabled", true, "Is Toys Enabled", "Should More Vaccable be able to vac Toys?");
+        IsSlimeFleeingEnabled = _moreVaccablesMod.CreateEntry("isSlimeFleeingEnabled", true, "Is Slime Fleeing Enabled", "Should gold, lucky and shadow flee?");
+        MelonPreferences.Save();
+        
         IconContainer ??= ConvertSprite(LoadImage("MoreVaccablesMod.iconContainer.png"));
         IconContainer.hideFlags |= HideFlags.HideAndDontSave;
-        
-    }
-    
-    public override void OnSceneWasLoaded(int buildIndex, string sceneName)
-    {
-        if (!sceneName.Equals("zoneCore"))
-            return;
-        foreach (var identifiableType in LateActivation)
+        foreach (var methodInfo in typeof(IdentifiableType).GetMethods())
         {
-            if (identifiableType.AppearancesDefault == null)
+            if (methodInfo.Name.Contains("TryGetId") && methodInfo.ReturnType == typeof(IdentifiableType))
             {
-                MelonLogger.Msg($"Can't add modded largo to be vaccable: {identifiableType.ReferenceId}");
-                continue;
+                Patch_VacuumItem.IdentifiableTypeTryGetId = methodInfo;
             }
-            if (identifiableType.prefab)
-                identifiableType.prefab.GetComponent<Vacuumable>().Size = VacuumableSize.NORMAL;
-            SetLargoIconAndPalette(identifiableType);
+        }
+
+        if (Patch_VacuumItem.IdentifiableTypeTryGetId == null)
+        {
+            Melon<EntryPoint>.Logger.Msg("Method named IdentifiableType TryGetId is null, please report this issue on mod website");
         }
     }
+    
     public static void SetPalette(IdentifiableType type)
     {
         var colorAverage = AverageColorFromTexture(type.icon.texture);

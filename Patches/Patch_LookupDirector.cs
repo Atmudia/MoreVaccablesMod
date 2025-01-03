@@ -3,6 +3,7 @@ using HarmonyLib;
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.Platform.AdditionalContent;
 using Il2CppMonomiPark.SlimeRancher.Script.Util;
+using Il2CppMonomiPark.SlimeRancher.Slime.Shadow;
 using UnityEngine;
 
 namespace MoreVaccablesMod.Patches;
@@ -13,7 +14,6 @@ public static class Patch_LookupDirector
     [HarmonyPatch(nameof(Awake)),HarmonyPostfix]
     public static void Awake(LookupDirector __instance)
     {
-
         VaccableBaseSlimeGroup ??= Get<IdentifiableTypeGroup>("VaccableBaseSlimeGroup");
         NonSlimesGroup ??= Get<IdentifiableTypeGroup>("NonSlimesGroup");
         
@@ -43,8 +43,7 @@ public static class Patch_LookupDirector
         slimeGold.prefab.GetComponent<Vacuumable>().Size = VacuumableSize.NORMAL;
         foreach (var slimeAppearance in slimeGold.AppearancesDefault)
             slimeGold.SetPalette(slimeAppearance);
-        if (slimeGold.prefab.TryGetComponentButWorking<GoldSlimeFlee>(out var goldSlimeFlee))
-            Object.Destroy(goldSlimeFlee);
+
         VaccableBaseSlimeGroup._memberTypes.Add(slimeGold);
         
         SlimeDefinition slimeLucky = Get<SlimeDefinition>("Lucky");
@@ -56,17 +55,16 @@ public static class Patch_LookupDirector
             slimeLucky.color = luckyColor;
             slimeAppearance._colorPalette = colorPalette;
         }
-        if (slimeLucky.prefab.TryGetComponentButWorking<LuckySlimeFlee>(out var slimeLuckyFlee))
-            Object.Destroy(slimeLuckyFlee);
+
         VaccableBaseSlimeGroup._memberTypes.Add(slimeLucky);
 
         SlimeDefinition slimeShadow = Get<SlimeDefinition>("Shadow");
         foreach (var slimeAppearance in slimeLucky.AppearancesDefault)
         {
-            ColorUtility.TryParseHtmlString("#15314d", out var luckyColor);
+            ColorUtility.TryParseHtmlString("#15314d", out var shadowColor);
             var colorPalette = slimeAppearance.ColorPalette;
-            colorPalette.Ammo = luckyColor;
-            slimeShadow.color = luckyColor;
+            colorPalette.Ammo = shadowColor;
+            slimeShadow.color = shadowColor;
             slimeAppearance._colorPalette = colorPalette;
         }
         VaccableBaseSlimeGroup._memberTypes.Add(slimeShadow);
@@ -94,6 +92,17 @@ public static class Patch_LookupDirector
             identType.color = potColor;
             identType.localizedName = localizedString;
             VaccableBaseSlimeGroup._memberTypes.Add(identType);
+            
+        }
+
+        if (IsSlimeFleeingEnabled.Value)
+        {
+            if (slimeGold.prefab.TryGetComponentButWorking(out GoldSlimeFlee goldSlimeFlee))
+                Object.Destroy(goldSlimeFlee);
+            if (slimeLucky.prefab.TryGetComponentButWorking(out LuckySlimeFlee slimeLuckyFlee))
+                Object.Destroy(slimeLuckyFlee);
+            if (slimeShadow.prefab.TryGetComponentButWorking(out ShadowSlimeScatter slimeScatter))
+                Object.Destroy(slimeScatter);
             
         }
         if (IsToysEnabled.Value)
