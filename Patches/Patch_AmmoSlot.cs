@@ -4,14 +4,16 @@ using MelonLoader;
 
 namespace MoreVaccablesMod.Patches;
 
-[HarmonyPatch(typeof(Ammo.Slot))]
+[HarmonyPatch(typeof(Il2CppMonomiPark.SlimeRancher.Player.AmmoSlot))]
 public static class Patch_AmmoSlot
 {
-    [HarmonyPatch(nameof(Ammo.Slot.Clear)), HarmonyPrefix]
-    public static void Clear(Ammo.Slot __instance)
+    [HarmonyPatch(nameof(Il2CppMonomiPark.SlimeRancher.Player.AmmoSlot.Clear)), HarmonyPrefix]
+    public static void Clear(Il2CppMonomiPark.SlimeRancher.Player.AmmoSlot __instance)
     {
-        var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder.FirstOrDefault(x =>x.data.GetHashCode() == __instance.GetHashCode());
+        var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder
+            .FirstOrDefault(x => x._data.GetHashCode() == __instance.GetHashCode());
         if (!ammoSlotViewHolder) return;
+
         var ammoSlot = ammoSlotViewHolder.transform.Find("Ammo Slot").gameObject;
         ammoSlot.transform.Find("Icon").gameObject.SetActive(true);
         ammoSlot.transform.Find("FirstSlime").gameObject.SetActive(false);
