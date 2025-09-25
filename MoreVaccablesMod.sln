@@ -1,6 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoreVaccablesMod", "MoreVaccablesMod.csproj", "{712F1D59-CBCD-4BFC-8E91-FD8140F9EDA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoreVaccables", "..\MoreVaccables\MoreVaccables.csproj", "{9748899F-A5D2-441F-AF32-F4E99D8A3A8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +17,15 @@ Global
 		{712F1D59-CBCD-4BFC-8E91-FD8140F9EDA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{712F1D59-CBCD-4BFC-8E91-FD8140F9EDA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{712F1D59-CBCD-4BFC-8E91-FD8140F9EDA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9748899F-A5D2-441F-AF32-F4E99D8A3A8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9748899F-A5D2-441F-AF32-F4E99D8A3A8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9748899F-A5D2-441F-AF32-F4E99D8A3A8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9748899F-A5D2-441F-AF32-F4E99D8A3A8C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0291B8AF-8268-4C67-97C6-5F8FFB5A9EE5}
 	EndGlobalSection
 EndGlobal

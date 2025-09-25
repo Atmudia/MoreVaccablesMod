@@ -1,47 +1,61 @@
 ﻿using System.Linq;
 using HarmonyLib;
 using MelonLoader;
+using UnityEngine;
 using UnityEngine.UI;
+using System;
+
 
 namespace MoreVaccablesMod.Patches;
 
-[HarmonyPatch(typeof(Ammo))]
+[HarmonyPatch]
 public static class Patch_Ammo
 {
-    [HarmonyPatch(nameof(Ammo.MaybeAddToSlot)), HarmonyPrefix]
-    public static void MaybeAddToSlot(Ammo __instance, IdentifiableType id, Identifiable identifiable, ref bool __result)
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Il2CppMonomiPark.SlimeRancher.Player.AmmoSlotManager), "MaybeAddToSlot")]
+    public static void MaybeAddToSlot(Il2CppMonomiPark.SlimeRancher.Player.AmmoSlotManager __instance, IdentifiableType id, Identifiable identifiable, ref bool __result)
     {
-        if (!__result || !LargoGroup.IsMember(id)) 
-                return;
-        var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder.Find(x => x.data.Id == id);
+        if (!__result || !LargoGroup.IsMember(id))
+            return;
+
+        var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder.FirstOrDefault(x => x._data.Id == id);
+        if (ammoSlotViewHolder == null) return;
+
         var ammoSlot = ammoSlotViewHolder.transform.Find("Ammo Slot").gameObject;
         ammoSlot.transform.Find("Icon").gameObject.SetActive(false);
+
         var firstSlime = ammoSlot.transform.Find("FirstSlime").gameObject;
         var secondSlime = ammoSlot.transform.Find("SecondSlime").gameObject;
+
         var slimeDefinition = id.Cast<SlimeDefinition>();
-        
-        var firstSlimeDefinition = SRSingleton<SceneContext>.Instance.SlimeAppearanceDirector.GetChosenSlimeAppearance(slimeDefinition.BaseSlimes[0]);
-        var secondSlimeDefinition = SRSingleton<SceneContext>.Instance.SlimeAppearanceDirector.GetChosenSlimeAppearance(slimeDefinition.BaseSlimes[1]);
-        firstSlime.GetComponent<Image>().sprite = firstSlimeDefinition.Icon;
-        secondSlime.GetComponent<Image>().sprite = secondSlimeDefinition.Icon;
-        firstSlime.gameObject.SetActive(true);
-        secondSlime.gameObject.SetActive(true);
+
+        var firstSlimeDef = SRSingleton<SceneContext>.Instance.SlimeAppearanceDirector
+            .GetChosenSlimeAppearance(slimeDefinition.BaseSlimes[0]);
+        var secondSlimeDef = SRSingleton<SceneContext>.Instance.SlimeAppearanceDirector
+            .GetChosenSlimeAppearance(slimeDefinition.BaseSlimes[1]);
+
+        firstSlime.GetComponent<Image>().sprite = firstSlimeDef.Icon;
+        secondSlime.GetComponent<Image>().sprite = secondSlimeDef.Icon;
+
+        firstSlime.SetActive(true);
+        secondSlime.SetActive(true);
     }
-    [HarmonyPatch(nameof(Ammo.DecrementSelectedAmmo)), HarmonyPrefix]
-    public static void DecrementSelectedAmmo(Ammo __instance, int amount)
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Il2CppMonomiPark.SlimeRancher.Player.AmmoSlotManager), "Decrement", new Type[] { typeof(IdentifiableType), typeof(int) })]
+    public static void DecrementSelectedAmmo(Il2CppMonomiPark.SlimeRancher.Player.AmmoSlotManager __instance, IdentifiableType id, int count = 1)
     {
-        var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder.FirstOrDefault(x =>x.data.Index == __instance.SelectedAmmoIndex);
-        if (!ammoSlotViewHolder) 
-            return;
-        if (!LargoGroup.IsMember(ammoSlotViewHolder.data.Id))
-            return;
-        var dataCount = ammoSlotViewHolder.data.Count - amount;
-        if (dataCount > 1)
-            return;
+        var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder
+            .FirstOrDefault(x => x._data.Id == id);
+        if (ammoSlotViewHolder == null) return;
+        if (!LargoGroup.IsMember(ammoSlotViewHolder._data.Id)) return;
+
+        var dataCount = ammoSlotViewHolder._data.Count - count;
+        if (dataCount > 1) return;
+
         var ammoSlot = ammoSlotViewHolder.transform.Find("Ammo Slot").gameObject;
         ammoSlot.transform.Find("Icon").gameObject.SetActive(true);
         ammoSlot.transform.Find("FirstSlime").gameObject.SetActive(false);
         ammoSlot.transform.Find("SecondSlime").gameObject.SetActive(false);
     }
-    
 }
