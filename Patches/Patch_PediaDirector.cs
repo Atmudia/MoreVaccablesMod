@@ -2,29 +2,25 @@
 
 namespace MoreVaccablesMod.Patches;
 
-[HarmonyPatch(typeof(PediaDirector), nameof(PediaDirector.Unlock), typeof(IdentifiableType))]
-public static class PediaDirectorMaybeShowPopup
+[HarmonyPatch(typeof(PediaDirector))]
+public static class Patch_PediaDirector
 {
-    public static bool Prefix(PediaDirector __instance, IdentifiableType identifiableType)
+    [HarmonyPatch(nameof(PediaDirector.Unlock), typeof(IdentifiableType)), HarmonyPrefix]
+    public static bool Unlock(PediaDirector __instance, IdentifiableType identifiableType)
     {
         if (!identifiableType) return true;
         if (LargoGroup.IsMember(identifiableType))
         {
             __instance.Unlock(SRSingleton<SceneContext>.Instance.PlayerState.VacuumItem.LargoSlimePediaEntry);
+            __instance.Unlock(SRSingleton<SceneContext>.Instance.PlayerState.VacuumItem.FeralSlimePediaEntry);
             return false;
         }
         
         switch (identifiableType.ReferenceId)
         {
             case "SlimeDefinition.Lucky":
-                __instance.Unlock(__instance.GetEntry(identifiableType));
-                return false;
             case "SlimeDefinition.Tarr":
-                __instance.Unlock(__instance.GetEntry(identifiableType));
-                return false;
             case "SlimeDefinition.Gold":
-                __instance.Unlock(__instance.GetEntry(identifiableType));
-                return false;
             case "SlimeDefinition.Shadow":
                 __instance.Unlock(__instance.GetEntry(identifiableType));
                 return false;

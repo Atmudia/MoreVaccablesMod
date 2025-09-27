@@ -6,7 +6,7 @@ namespace MoreVaccablesMod.Patches;
 public class Patch_SlimeAppearanceApplicator
 {
     internal static bool IsExpelled;
-    [HarmonyPatch(nameof(SetExpression)), HarmonyPrefix]
+    [HarmonyPatch(nameof(SlimeAppearanceApplicator.SetExpression)), HarmonyPrefix]
     public static void SetExpression(SlimeAppearanceApplicator __instance)
     {
         if (!__instance.Appearance && IsExpelled)

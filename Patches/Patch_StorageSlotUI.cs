@@ -1,22 +1,26 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using Il2CppMonomiPark.SlimeRancher.Persist;
+using Il2CppMonomiPark.SlimeRancher.Player;
 using Il2CppMonomiPark.SlimeRancher.UI;
 using MelonLoader;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace MoreVaccablesMod.Patches;
 
 [HarmonyPatch(typeof(StorageSlotUI))]
 public static class Patch_StorageSlotUI
 {
-    [HarmonyPatch(nameof(SetImageSprite)), HarmonyPrefix]
+    [HarmonyPatch(nameof(StorageSlotUI.SetImageSprite)), HarmonyPrefix]
     public static void SetImageSprite(StorageSlotUI __instance, Image image, Sprite sprite)
     {
         var identifiableType = __instance.GetCurrentId();
         if (!LargoGroup.IsMember(identifiableType)) 
             return;
         var ammoSlot = __instance.bar.transform.gameObject;
+        __instance.bar.maxValue = __instance.GetMaxCount();
         var icon = ammoSlot.transform.Find("Icon").gameObject;
         var firstSlime = ammoSlot.transform.Find("FirstSlime");
         var secondSlime = ammoSlot.transform.Find("SecondSlime");
@@ -48,7 +52,7 @@ public static class Patch_StorageSlotUI
         icon.gameObject.SetActive(false);
     }
 
-    [HarmonyPatch(nameof(Clear)), HarmonyPrefix]
+    [HarmonyPatch(nameof(StorageSlotUI.Clear)), HarmonyPrefix]
     public static void Clear(StorageSlotUI __instance)
     {
         var ammoSlot = __instance.bar.transform.gameObject;
@@ -59,6 +63,7 @@ public static class Patch_StorageSlotUI
         {
             return;
         }
+        __instance.bar.maxValue = __instance.GetMaxCount();
         firstSlime.gameObject.SetActive(false);
         secondSlime.gameObject.SetActive(false);
         icon.gameObject.SetActive(true);

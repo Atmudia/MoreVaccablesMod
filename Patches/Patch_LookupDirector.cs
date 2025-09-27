@@ -11,7 +11,7 @@ namespace MoreVaccablesMod.Patches;
 [HarmonyPatch(typeof(LookupDirector))]
 public static class Patch_LookupDirector
 {
-    [HarmonyPatch(nameof(Awake)),HarmonyPostfix]
+    [HarmonyPatch(nameof(LookupDirector.Awake)),HarmonyPostfix]
     public static void Awake(LookupDirector __instance)
     {
         VaccableBaseSlimeGroup ??= Get<IdentifiableTypeGroup>("VaccableBaseSlimeGroup");
@@ -97,12 +97,13 @@ public static class Patch_LookupDirector
 
         if (IsSlimeFleeingEnabled.Value)
         {
-            if (slimeGold.prefab.TryGetComponentButWorking(out GoldSlimeFlee goldSlimeFlee))
+            foreach (var goldSlimeFlee in slimeGold.prefab.GetComponentsInChildren<GoldSlimeFlee>())
                 Object.Destroy(goldSlimeFlee);
-            if (slimeLucky.prefab.TryGetComponentButWorking(out LuckySlimeFlee slimeLuckyFlee))
+            
+            foreach (var slimeLuckyFlee in slimeLucky.prefab.GetComponentsInChildren<LuckySlimeFlee>())
                 Object.Destroy(slimeLuckyFlee);
-            if (slimeShadow.prefab.TryGetComponentButWorking(out ShadowSlimeScatter slimeScatter))
-                Object.Destroy(slimeScatter);
+            foreach (var shadowSlimeScatter in slimeShadow.prefab.GetComponentsInChildren<ShadowSlimeScatter>())
+                Object.Destroy(shadowSlimeScatter);
             
         }
         if (IsToysEnabled.Value)

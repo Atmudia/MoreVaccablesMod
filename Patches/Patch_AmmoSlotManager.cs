@@ -9,7 +9,7 @@ using System;
 namespace MoreVaccablesMod.Patches;
 
 [HarmonyPatch]
-public static class Patch_Ammo
+public static class Patch_AmmoSlotManager
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Il2CppMonomiPark.SlimeRancher.Player.AmmoSlotManager), "MaybeAddToSlot")]

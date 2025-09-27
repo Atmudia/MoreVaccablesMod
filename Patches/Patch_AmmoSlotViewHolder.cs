@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace MoreVaccablesMod.Patches;
 
-[HarmonyPatch(typeof(Il2CppMonomiPark.SlimeRancher.UI.AmmoSlotViewHolder))]
+[HarmonyPatch(typeof(AmmoSlotViewHolder))]
 public static class Patch_AmmoSlotViewHolder
 {
     public static List<AmmoSlotViewHolder> ammoSlotViewHolder = new List<AmmoSlotViewHolder>();

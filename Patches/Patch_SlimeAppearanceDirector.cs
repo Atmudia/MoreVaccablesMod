@@ -5,7 +5,7 @@ namespace MoreVaccablesMod.Patches;
 [HarmonyPatch(typeof(SlimeAppearanceDirector))]
 public static class Patch_SlimeAppearanceDirector
 {
-    [HarmonyPatch(nameof(GetSpecificSlimeAppearance)), HarmonyPrefix]
+    [HarmonyPatch(nameof(SlimeAppearanceDirector.GetSpecificSlimeAppearance)), HarmonyPrefix]
     public static bool GetSpecificSlimeAppearance(SlimeAppearanceDirector __instance, IdentifiableType slimeId, SlimeAppearance.AppearanceSaveSet saveSet, ref SlimeAppearance __result)
     {
         LargoGroup ??= Get<IdentifiableTypeGroup>("LargoGroup");

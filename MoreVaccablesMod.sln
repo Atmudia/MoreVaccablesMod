@@ -5,8 +5,6 @@ VisualStudioVersion = 17.14.36414.22 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoreVaccablesMod", "MoreVaccablesMod.csproj", "{712F1D59-CBCD-4BFC-8E91-FD8140F9EDA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoreVaccables", "..\MoreVaccables\MoreVaccables.csproj", "{9748899F-A5D2-441F-AF32-F4E99D8A3A8C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
