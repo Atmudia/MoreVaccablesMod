@@ -8,7 +8,7 @@ using MoreVaccablesMod.Patches;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.3.3", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
+[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.3.4", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
 [assembly: MelonGame("MonomiPark", "SlimeRancher2")]
 namespace MoreVaccablesMod;
 
@@ -22,7 +22,7 @@ public class EntryPoint : MelonMod
     private MelonPreferences_Category _moreVaccablesMod;
     internal static MelonPreferences_Entry<bool> IsTarrEnabled;
     internal static MelonPreferences_Entry<bool> IsToysEnabled;
-    internal static MelonPreferences_Entry<bool> IsSlimeFleeingEnabled;
+    internal static MelonPreferences_Entry<bool> IsSlimeFleeingDisabled;
     
     public static List<SlimeDefinition> LateActivation = [];
     public override void OnInitializeMelon()
@@ -31,7 +31,7 @@ public class EntryPoint : MelonMod
         _moreVaccablesMod = MelonPreferences.CreateCategory(nameof(_moreVaccablesMod));
         IsTarrEnabled = _moreVaccablesMod.CreateEntry("isTarrEnabled", true, "Is Tarr Enabled", "Should More Vaccable be able to vac Tarr Slime?");
         IsToysEnabled = _moreVaccablesMod.CreateEntry("isToysEnabled", true, "Are Toys Enabled", "Should More Vaccable be able to vac Toys?");
-        IsSlimeFleeingEnabled = _moreVaccablesMod.CreateEntry("isSlimeFleeingEnabled", true, "Is Slime Fleeing Enabled", "Should gold, lucky and shadow flee?");
+        IsSlimeFleeingDisabled = _moreVaccablesMod.CreateEntry("isSlimeFleeingDisabled", false, "Is Slime Fleeing Disabled", "Should gold, lucky and shadow flee?");
         MelonPreferences.Save();
         
         IconContainer ??= ConvertSprite(LoadImage("MoreVaccablesMod.iconContainer.png"));
