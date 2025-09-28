@@ -8,7 +8,7 @@ using MoreVaccablesMod.Patches;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.3.4", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
+[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.3.5", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
 [assembly: MelonGame("MonomiPark", "SlimeRancher2")]
 namespace MoreVaccablesMod;
 
@@ -27,7 +27,6 @@ public class EntryPoint : MelonMod
     public static List<SlimeDefinition> LateActivation = [];
     public override void OnInitializeMelon()
     {
-     
         _moreVaccablesMod = MelonPreferences.CreateCategory(nameof(_moreVaccablesMod));
         IsTarrEnabled = _moreVaccablesMod.CreateEntry("isTarrEnabled", true, "Is Tarr Enabled", "Should More Vaccable be able to vac Tarr Slime?");
         IsToysEnabled = _moreVaccablesMod.CreateEntry("isToysEnabled", true, "Are Toys Enabled", "Should More Vaccable be able to vac Toys?");

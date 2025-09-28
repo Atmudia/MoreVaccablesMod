@@ -4,9 +4,7 @@ using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.Platform.AdditionalContent;
 using Il2CppMonomiPark.SlimeRancher.Script.Util;
 using Il2CppMonomiPark.SlimeRancher.Slime.Shadow;
-using MelonLoader;
 using UnityEngine;
-using UnityEngine.Localization.SmartFormat.PersistentVariables;
 
 namespace MoreVaccablesMod.Patches;
 
@@ -99,22 +97,17 @@ public static class Patch_LookupDirector
 
         if (!IsSlimeFleeingDisabled.Value)
         {
-            foreach (var goldSlimeFlee in slimeGold.prefab.GetComponentsInChildren<GoldSlimeFlee>())
-                Object.DestroyImmediate(goldSlimeFlee);
-            
-            foreach (var slimeLuckyFlee in slimeLucky.prefab.GetComponentsInChildren<LuckySlimeFlee>())
-                Object.DestroyImmediate(slimeLuckyFlee);
-            foreach (var shadowSlimeScatter in slimeShadow.prefab.GetComponentsInChildren<ShadowSlimeScatter>())
-                Object.DestroyImmediate(shadowSlimeScatter);
             var plexerMetadata = Resources.FindObjectsOfTypeAll<SubbehaviorPlexerMetadata>().FirstOrDefault(x => x.name.Equals("StandardPlexerMetadata"));
-            foreach (var plexer in slimeShadow.prefab.GetComponentsInChildren<SubbehaviourPlexer>())
-            {
-                plexer._hasShadowSlimeScatter = false;
-                plexer._metadata = plexerMetadata;
-                var subbehaviours = plexer._subbehaviors.ToList();
-                subbehaviours.RemoveAt(0);
-                plexer._subbehaviors = subbehaviours.ToArray();
-            }
+
+
+            var plexerGold = slimeGold.prefab.GetComponent<SubbehaviourPlexer>();
+            RemoveSubbehaviours<GoldSlimeFlee>(slimeGold.prefab, plexerGold);
+            var plexerLucky = slimeLucky.prefab.GetComponent<SubbehaviourPlexer>();
+            RemoveSubbehaviours<LuckySlimeFlee>(slimeLucky.prefab, plexerLucky);
+            var plexerShadow = slimeShadow.prefab.GetComponent<SubbehaviourPlexer>();
+            plexerShadow._metadata = plexerMetadata;
+            plexerShadow._hasShadowSlimeScatter = false;
+            RemoveSubbehaviours<ShadowSlimeScatter>(slimeShadow.prefab, plexerShadow);
         }
 
       
@@ -142,6 +135,18 @@ public static class Patch_LookupDirector
         __instance._identifiableTypeGroupMap[VaccableBaseSlimeGroup]._memberTypes = VaccableBaseSlimeGroup._memberTypes;
         __instance._identifiableTypeGroupMap[VaccableBaseSlimeGroup]._memberGroups = VaccableBaseSlimeGroup._memberGroups;
     }
+    
+    public static void RemoveSubbehaviours<T>(GameObject prefab, SubbehaviourPlexer plexer) where T : Subbehaviour
+    {
+        foreach (var behaviour in prefab.GetComponentsInChildren<T>(true))
+        {
+            var subbehaviours = plexer._subbehaviors.ToList();
+            subbehaviours.Remove(behaviour);
+            plexer._subbehaviors = subbehaviours.ToArray();
+            Object.DestroyImmediate(behaviour);
+        }
+    }
+
     
     
 }
