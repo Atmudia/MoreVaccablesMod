@@ -2,13 +2,13 @@
 global using static MoreVaccablesMod.EntryPoint;
 using System.Collections.Generic;
 using System.Linq;
+using HarmonyLib;
 using MelonLoader;
 using MoreVaccablesMod;
-using MoreVaccablesMod.Patches;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.3.5", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
+[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.3.6", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
 [assembly: MelonGame("MonomiPark", "SlimeRancher2")]
 namespace MoreVaccablesMod;
 
@@ -35,17 +35,10 @@ public class EntryPoint : MelonMod
         
         IconContainer ??= ConvertSprite(LoadImage("MoreVaccablesMod.iconContainer.png"));
         IconContainer.hideFlags |= HideFlags.HideAndDontSave;
-        foreach (var methodInfo in typeof(IdentifiableType).GetMethods())
+        
+        foreach (var patchedMethod in HarmonyInstance.GetPatchedMethods())
         {
-            if (methodInfo.Name.Contains("TryGetId") && methodInfo.ReturnType == typeof(IdentifiableType))
-            {
-                Patch_VacuumItem.IdentifiableTypeTryGetId = methodInfo;
-            }
-        }
-
-        if (Patch_VacuumItem.IdentifiableTypeTryGetId == null)
-        {
-            Melon<EntryPoint>.Logger.Msg("Method named IdentifiableType TryGetId is null, please report this issue on mod website");
+            MelonLogger.Msg(patchedMethod.FullDescription());
         }
     }
     
@@ -56,16 +49,17 @@ public class EntryPoint : MelonMod
     }
     public static void SetLargoIconAndPalette(SlimeDefinition type)
     {
+        var splatColor = AverageColorFromArray(type.BaseSlimes[0]!.AppearancesDefault[0]!.SplatColor, type.BaseSlimes[1]!.AppearancesDefault[0]!.SplatColor);
+        type.color = splatColor;
         foreach (var slimeAppearance in type.AppearancesDefault)
         {
-            var splatColor = AverageColorFromArray(type.BaseSlimes[0]!.AppearancesDefault[0]!.SplatColor, type.BaseSlimes[1]!.AppearancesDefault[0]!.SplatColor);
-            type.color = splatColor;
             var colorPalette = slimeAppearance.ColorPalette;
             colorPalette.Ammo = splatColor;
             slimeAppearance._icon = IconLargoPedia;
             slimeAppearance._colorPalette = colorPalette; 
-            type.icon = IconLargoPedia;
         }
+        
+        type.icon = IconLargoPedia;
            
     }
     public static Color32 AverageColorFromArray(params Color32[] color32)
@@ -153,7 +147,7 @@ public class EntryPoint : MelonMod
             _ = manifestResourceStream.Read(bytes);
         
             var texture2D = new Texture2D(1, 1);
-            ImageConversion.LoadImage(texture2D, bytes);
+            Il2CppImageConversionManager.LoadImage(texture2D, bytes, false);
             return texture2D;
         }
 

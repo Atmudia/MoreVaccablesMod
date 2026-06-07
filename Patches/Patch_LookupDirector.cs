@@ -18,7 +18,7 @@ public static class Patch_LookupDirector
         NonSlimesGroup ??= Get<IdentifiableTypeGroup>("NonSlimesGroup");
         
         LargoGroup ??= Get<IdentifiableTypeGroup>("LargoGroup");
-        IconLargoPedia ??= Get<Sprite>("iconLargoPedia");
+        IconLargoPedia ??= Get<Sprite>("iconLargoPedia_small");
         
         foreach (var identifiableType in new Il2CppSystem.Collections.Generic.List<IdentifiableType>(LargoGroup.GetAllMembers()))
         {
@@ -146,7 +146,4 @@ public static class Patch_LookupDirector
             Object.DestroyImmediate(behaviour);
         }
     }
-
-    
-    
 }

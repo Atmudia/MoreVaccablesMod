@@ -1,27 +1,16 @@
-using System.Reflection;
 using HarmonyLib;
 using Il2CppMonomiPark.SlimeRancher;
+using Il2CppMonomiPark.SlimeRancher.Player;
 using Il2CppMonomiPark.SlimeRancher.Player.PlayerItems;
-using MelonLoader;
-using UnityEngine;
 
 namespace MoreVaccablesMod.Patches;
 
-[HarmonyPatch(typeof(VacuumItem), nameof(VacuumItem.Expel), typeof(GameObject), typeof(bool), typeof(float), typeof(SlimeAppearance.AppearanceSaveSet))]
+[HarmonyPatch(typeof(VacuumItem), nameof(VacuumItem.Expel), typeof(AmmoSlot.AmmoMetadata), typeof(bool), typeof(float), typeof(bool))]
 public class Patch_VacuumItem
 {
-    internal static MethodInfo IdentifiableTypeTryGetId;
-    public static void Prefix(GameObject toExpel)
+    public static void Postfix(AmmoSlot.AmmoMetadata metadata)
     {
-        if (IdentifiableTypeTryGetId == null)
-            return;
-
-        IdentifiableType identifiableType = (IdentifiableType)IdentifiableTypeTryGetId.Invoke(null, [
-            toExpel, null
-        ]);
-        // if (IdentifiableType.TryGetId(toExpel, out var type) && LargoGroup.IsMember(type))   //UNCOMMENT THIS LINE WHEN MELON GOT UPDATE
-          
-        if (identifiableType&& LargoGroup.IsMember(identifiableType))
+        if (metadata.Id && LargoGroup.IsMember(metadata.Id))
             Patch_SlimeAppearanceApplicator.IsExpelled = true;
     }
 }

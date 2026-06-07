@@ -49,8 +49,14 @@
 	  <Reference Include="Unity.Localization">
 	    <HintPath>Libs\Unity.Localization.dll</HintPath>
 	  </Reference>
+	  <Reference Include="Unity.Mathematics">
+	    <HintPath>Libs\Unity.Mathematics.dll</HintPath>
+	  </Reference>
 	  <Reference Include="UnityEngine.CoreModule">
 	    <HintPath>Libs\UnityEngine.CoreModule.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.Il2CppImageConversionManager">
+	    <HintPath>Libs\UnityEngine.Il2CppImageConversionManager.dll</HintPath>
 	  </Reference>
 	  <Reference Include="UnityEngine.ImageConversionModule">
 	    <HintPath>Libs\UnityEngine.ImageConversionModule.dll</HintPath>

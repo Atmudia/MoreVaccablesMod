@@ -5,7 +5,7 @@ namespace MoreVaccablesMod.Patches;
 [HarmonyPatch(typeof(PediaDirector))]
 public static class Patch_PediaDirector
 {
-    [HarmonyPatch(nameof(PediaDirector.Unlock), typeof(IdentifiableType)), HarmonyPrefix]
+    [HarmonyPatch(nameof(PediaDirector.Unlock), typeof(IdentifiableType), typeof(bool)), HarmonyPrefix]
     public static bool Unlock(PediaDirector __instance, IdentifiableType identifiableType)
     {
         if (!identifiableType) return true;

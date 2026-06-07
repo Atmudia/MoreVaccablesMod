@@ -2,7 +2,6 @@
 using System.Linq;
 using HarmonyLib;
 using Il2CppMonomiPark.SlimeRancher.Player;
-using MelonLoader;
 
 namespace MoreVaccablesMod.Patches;
 
@@ -14,16 +13,14 @@ public static class Patch_AmmoSlot
     [HarmonyPatch(nameof(AmmoSlot.Clear)), HarmonyPrefix]
     public static void Clear(AmmoSlot __instance)
     {
-        var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder
-            .FirstOrDefault(x => x._data.GetHashCode() == __instance.GetHashCode());
+        var ammoSlotViewHolder = Patch_AmmoSlotViewHolder.ammoSlotViewHolder.FirstOrDefault(x => x._data == __instance);
         if (!ammoSlotViewHolder) return;
-
         var ammoSlot = ammoSlotViewHolder.transform.Find("Ammo Slot").gameObject;
         ammoSlot.transform.Find("Icon").gameObject.SetActive(true);
         ammoSlot.transform.Find("FirstSlime").gameObject.SetActive(false);
         ammoSlot.transform.Find("SecondSlime").gameObject.SetActive(false);
     }
-
+    
     [HarmonyPatch(nameof(AmmoSlot.MaxCount), MethodType.Getter), HarmonyPostfix]
     public static void MaxCount(AmmoSlot __instance, ref int __result)
     {

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using HarmonyLib;
 using Il2CppMonomiPark.SlimeRancher.UI;
-using MelonLoader;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,12 +41,11 @@ public static class Patch_AmmoSlotViewHolder
     [HarmonyPatch(nameof(AmmoSlotViewHolder.UpdateAmmoDisplay)), HarmonyPrefix]
     public static void UpdateAmmoDisplay(AmmoSlotViewHolder __instance, Il2CppMonomiPark.SlimeRancher.Player.AmmoSlot data)
     {
-        if (!LargoGroup.IsMember(data.Id) || data.Count == 0) return;
-
+        if (data == null || !LargoGroup.IsMember(data.Id) || data.Count == 0) return;
+        
         var ammoSlotGO = __instance.transform.Find("Ammo Slot").gameObject;
         var firstSlime = ammoSlotGO.transform.Find("FirstSlime").gameObject;
         if (firstSlime.activeSelf) return;
-
         ammoSlotGO.transform.Find("Icon").gameObject.SetActive(false);
         var secondSlime = ammoSlotGO.transform.Find("SecondSlime").gameObject;
 
@@ -57,7 +55,7 @@ public static class Patch_AmmoSlotViewHolder
 
         if (firstSlimeDef) firstSlime.GetComponent<Image>().sprite = firstSlimeDef.icon;
         if (secondSlimeDef) secondSlime.GetComponent<Image>().sprite = secondSlimeDef.icon;
-
+        
         firstSlime.SetActive(true);
         secondSlime.SetActive(true);
     }

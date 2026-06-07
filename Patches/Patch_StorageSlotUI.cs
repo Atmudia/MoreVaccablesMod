@@ -1,9 +1,5 @@
-﻿using System;
-using HarmonyLib;
-using Il2CppMonomiPark.SlimeRancher.Persist;
-using Il2CppMonomiPark.SlimeRancher.Player;
+﻿using HarmonyLib;
 using Il2CppMonomiPark.SlimeRancher.UI;
-using MelonLoader;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
