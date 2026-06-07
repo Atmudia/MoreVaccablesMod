@@ -8,7 +8,7 @@ using MoreVaccablesMod;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.3.6", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
+[assembly: MelonInfo(typeof(EntryPoint), "MoreVaccablesMod", "1.3.7", "Atmudia", "https://www.nexusmods.com/slimerancher2/mods/42")]
 [assembly: MelonGame("MonomiPark", "SlimeRancher2")]
 namespace MoreVaccablesMod;
 
@@ -35,11 +35,6 @@ public class EntryPoint : MelonMod
         
         IconContainer ??= ConvertSprite(LoadImage("MoreVaccablesMod.iconContainer.png"));
         IconContainer.hideFlags |= HideFlags.HideAndDontSave;
-        
-        foreach (var patchedMethod in HarmonyInstance.GetPatchedMethods())
-        {
-            MelonLogger.Msg(patchedMethod.FullDescription());
-        }
     }
     
     public static void SetPalette(IdentifiableType type)
